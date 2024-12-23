@@ -1,0 +1,3 @@
+[workspace]
+members = ["apps/nexus"]
+resolver = "2"
