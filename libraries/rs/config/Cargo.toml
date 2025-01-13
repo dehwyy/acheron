@@ -1,0 +1,10 @@
+[package]
+authors = ["dehwyy", "dehwyyy@gmail.com"]
+edition = "2024"
+name = "config"
+readme = "README.md"
+version = "0.1.0"
+
+[dependencies]
+serde = {version = "1.0", features = ["derive"]}
+toml = {version = "0.8"}

@@ -1,3 +1,6 @@
 [workspace]
-members = ["apps/nexus"]
+members = ["apps/nexus", "libraries/rs/config"]
 resolver = "2"
+
+[workspace.dependencies]
+config = {path = "./libraries/rs/config"}
