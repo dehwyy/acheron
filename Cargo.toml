@@ -1,5 +1,5 @@
 [workspace]
-members = ["apps/nexus", "libraries/rs/config"]
+members = ["apps/nexus", "apps/stream_host", "libraries/rs/config"]
 resolver = "2"
 
 [workspace.dependencies]
