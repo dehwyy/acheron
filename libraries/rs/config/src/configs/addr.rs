@@ -26,6 +26,4 @@ impl Deref for Addr {
     }
 }
 
-impl crate::parse::Parsable for Addr {
-    const filename: &'static str = "addr.toml";
-}
+impl crate::parse::Parsable for Addr {}

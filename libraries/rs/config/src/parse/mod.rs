@@ -1,40 +1,40 @@
-use std::fs::File;
-use std::io::Read;
-use std::path::PathBuf;
 use std::str::from_utf8;
 
 use serde::de::DeserializeOwned;
 
+pub mod deserializable;
+pub mod env;
+
+pub mod path;
+use path::Path;
+
+pub(crate) enum ConfigFormat {
+    Env,
+    TOML,
+}
+
 pub(crate) trait Parsable {
-    const filename: &'static str;
+    const filepath: Path<'_> = Path::new("config", "config.toml");
+    const format: ConfigFormat = ConfigFormat::TOML;
 
     fn from(data: Vec<u8>) -> Self
     where
         Self: DeserializeOwned,
     {
-        toml::from_str(
-            from_utf8(&data).expect(&format!("Failed to parse {} to &str.", Self::filename)),
-        )
-        .expect("Failed to parse to toml.")
+        match Self::format {
+            ConfigFormat::TOML => parse_toml(data),
+            _ => {
+                panic!(
+                    "Unsupported config format. Maybe you should use `new_env` (e.g for `env` config) instead of `new` function."
+                )
+            },
+        }
     }
 }
 
-pub fn new<T>() -> T
-where
-    T: Parsable + DeserializeOwned,
-{
-    T::from(read_file::<T>())
-}
-
-fn read_file<T: Parsable>() -> Vec<u8> {
-    let mut path = PathBuf::from("config");
-    path.push(T::filename);
-
-    let mut filebuf = vec![];
-    File::open(path)
-        .expect("Failed to open config file.")
-        .read_to_end(&mut filebuf)
-        .expect("Failed to read config file.");
-
-    filebuf
+fn parse_toml<T: Parsable + DeserializeOwned>(data: Vec<u8>) -> T {
+    toml::from_str(
+        from_utf8(&data).expect(&format!("Failed to parse {} as .toml to &str.", T::filepath)),
+    )
+    .expect("Failed to parse to toml.")
 }
