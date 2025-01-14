@@ -2,10 +2,14 @@ module github.com/dehwyy/mugen/apps/stream_broadcaster
 
 go 1.23.2
 
-replace github.com/dehwyy/mugen/libraries/go/logg => ../../libraries/go/logg
+replace (
+	github.com/dehwyy/mugen/libraries/go/config => ../../libraries/go/config
+	github.com/dehwyy/mugen/libraries/go/logg => ../../libraries/go/logg
+)
 
 require (
 	github.com/99designs/gqlgen v0.17.63
+	github.com/dehwyy/mugen/libraries/go/config v0.0.0-00010101000000-000000000000
 	github.com/dehwyy/mugen/libraries/go/logg v0.0.0-00010101000000-000000000000
 	github.com/gin-gonic/gin v1.10.0
 	github.com/vektah/gqlparser/v2 v2.5.21
@@ -13,6 +17,7 @@ require (
 )
 
 require (
+	github.com/BurntSushi/toml v1.4.0 // indirect
 	github.com/agnivade/levenshtein v1.2.0 // indirect
 	github.com/bytedance/sonic v1.12.7 // indirect
 	github.com/bytedance/sonic/loader v0.2.2 // indirect
@@ -28,7 +33,9 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/hashicorp/golang-lru/v2 v2.0.7 // indirect
+	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
+	github.com/kelseyhightower/envconfig v1.4.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.9 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect

@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/dehwyy/mugen/apps/stream_broadcaster/internal/gql"
 	"github.com/dehwyy/mugen/apps/stream_broadcaster/internal/server"
+	"github.com/dehwyy/mugen/libraries/go/config"
 	"github.com/dehwyy/mugen/libraries/go/logg"
 	"go.uber.org/fx"
 )
@@ -10,6 +11,7 @@ import (
 func main() {
 	fx.New(
 		fx.Provide(
+			config.New(config.Opts{}),
 			logg.New(logg.Opts{
 				ServiceName: "stream_broadcaster",
 			}),

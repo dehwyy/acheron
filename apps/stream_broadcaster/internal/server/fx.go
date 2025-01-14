@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 
+	"github.com/dehwyy/mugen/libraries/go/config"
 	"github.com/dehwyy/mugen/libraries/go/logg"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/fx"
@@ -11,8 +12,9 @@ import (
 type Opts struct {
 	fx.In
 
-	LC  fx.Lifecycle
-	Log logg.Logger
+	LC     fx.Lifecycle
+	Log    logg.Logger
+	Config config.Config
 }
 
 func NewFx(opts Opts) *Server {
@@ -24,8 +26,7 @@ func NewFx(opts Opts) *Server {
 		OnStart: func(ctx context.Context) error {
 			go func() {
 				opts.Log.Info().Msg("Starting server...")
-				// TODO: add config
-				r.Start(ctx, 8081)
+				r.Start(ctx, opts.Config.Addr().Ports.StreamBroadcasterPort)
 			}()
 			return nil
 		},
