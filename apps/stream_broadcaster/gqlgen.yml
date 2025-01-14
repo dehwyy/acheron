@@ -4,7 +4,7 @@ schema:
 exec:
   package: gqlgen
   layout: single-file # or follow-schema
-  filename: internal/gql/gqlgen/gqlgen.go  # for single-file
+  filename: internal/gql/gqlgen/generated.go  # for single-file
   # Only for follow-schema layout:
   # dir: internal/gql/generated
   # filename_template: "{name}.generated.go"
@@ -28,7 +28,7 @@ model:
   # model_template: [your/path/model.gotpl]
 
 resolver:
-  package: gqlresolvers
+  package: resolvers
   layout: follow-schema # or "single-file."
   dir: internal/gql/resolvers
   filename_template: "{name}.resolver.go"
@@ -78,13 +78,13 @@ resolver:
 # return_pointers_in_unmarshalinput: false
 
 # Optional: wrap nullable input fields with Omittable
-# nullable_input_omittable: true
+nullable_input_omittable: true
 
 # Optional: set to speed up generation time by not performing a final validation pass.
 # skip_validation: true
 
 # Optional: set to skip running `go mod tidy` when generating server code
-# skip_mod_tidy: true
+skip_mod_tidy: true
 
 # Optional: if this is set to true, argument directives that
 # decorate a field with a null value will still be called.
@@ -114,6 +114,9 @@ autobind:
 # modelgen, the others will be allowed when binding to fields. Configure them to
 # your liking
 models:
+  Byte:
+    model: github.com/dehwyy/mugen/apps/stream_broadcaster/internal/gql/scalars.Byte
+
   Bytes:
     model: github.com/dehwyy/mugen/apps/stream_broadcaster/internal/gql/scalars.Bytes
 

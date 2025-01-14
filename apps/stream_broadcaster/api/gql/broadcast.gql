@@ -1,4 +1,7 @@
-scalar Bytes
+extend type Query {
+	getStream(req: StreamRequest!): StreamResponse!
+}
+
 
 input StreamRequest {
 	id: String!
@@ -8,8 +11,4 @@ input StreamRequest {
 type StreamResponse {
 	data: Bytes!
 	id: String!
-}
-
-type Query {
-	getStream(req: StreamRequest!): StreamResponse!
 }

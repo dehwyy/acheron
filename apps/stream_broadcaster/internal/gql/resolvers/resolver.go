@@ -1,7 +1,20 @@
-package gqlresolvers
+package resolvers
 
-import "github.com/dehwyy/mugen/apps/stream_broadcaster/internal/gql/gqlgen"
+import (
+	"github.com/dehwyy/mugen/libraries/go/logg"
+	"go.uber.org/fx"
+)
 
-type Resolver struct{}
+type Deps struct {
+	fx.In
 
-func (r *Resolver) Query() gqlgen.QueryResolver { return &queryResolver{r} }
+	Log logg.Logger
+}
+
+type Resolver struct {
+	Deps
+}
+
+func New(deps Deps) *Resolver {
+	return &Resolver{deps}
+}
