@@ -7,6 +7,7 @@ import (
 	"github.com/dehwyy/mugen/apps/stream_broadcaster/internal/gql/gqlgen"
 	gqlresolvers "github.com/dehwyy/mugen/apps/stream_broadcaster/internal/gql/resolvers"
 	"github.com/dehwyy/mugen/apps/stream_broadcaster/internal/server"
+	"github.com/dehwyy/mugen/libraries/go/logg"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/fx"
 )
@@ -15,9 +16,10 @@ type Opts struct {
 	fx.In
 
 	Server *server.Server
+	Log    logg.Logger
 }
 
-func New(opts Opts) *handler.Server {
+func NewFx(opts Opts) *handler.Server {
 	cfg := gqlgen.Config{
 		Resolvers: &gqlresolvers.Resolver{},
 	}
@@ -34,6 +36,8 @@ func New(opts Opts) *handler.Server {
 	opts.Server.Any("/api/query", func(ctx *gin.Context) {
 		h.ServeHTTP(ctx.Writer, ctx.Request)
 	})
+
+	opts.Log.Info().Msg("GraphQL initialized!")
 
 	return h
 }
