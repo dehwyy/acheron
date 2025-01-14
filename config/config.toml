@@ -1,2 +1,3 @@
 [ports]
 srt_server = 2233
+stream_broadcaster = 8081
