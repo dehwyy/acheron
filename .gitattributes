@@ -1,0 +1,10 @@
+*.c3 linguist-detectable
+*.c3 linguist-language=c
+*.gql linguist-detectable
+
+*.js linguist-vendored
+*.mjs linguist-vendored
+*.css linguist-vendored
+*.scss linguist-vendored
+*.html linguist-vendored
+web/app/components/ui/* linguist-vendored
