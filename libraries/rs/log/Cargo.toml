@@ -1,0 +1,11 @@
+[package]
+authors = ["dehwyy", "dehwyyy@gmail.com"]
+edition = "2024"
+name = "log"
+readme = "README.md"
+version = "0.1.0"
+
+[dependencies]
+sentry = {version = "0.36.0", features = ["tracing"]}
+tracing = "0.1"
+tracing-subscriber = {version = "0.3", features = ["ansi", "chrono"]}

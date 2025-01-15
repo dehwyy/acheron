@@ -1,6 +1,7 @@
 [workspace]
-members = ["apps/nexus", "apps/stream_host", "libraries/rs/config"]
+members = ["apps/nexus", "apps/stream_host", "libraries/rs/config", "libraries/rs/log"]
 resolver = "2"
 
 [workspace.dependencies]
 config = {path = "./libraries/rs/config"}
+log = {path = "./libraries/rs/log"}
