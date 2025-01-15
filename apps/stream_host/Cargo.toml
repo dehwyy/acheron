@@ -13,3 +13,4 @@ srt-tokio = {version = "0.4"}
 tokio = {version = "1", features = ["full"]}
 
 config = {workspace = true}
+log = {workspace = true}
