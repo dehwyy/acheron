@@ -6,7 +6,9 @@
     "engines": {
         "node": ">= 20"
     },
-    "workspaces": [],
+    "workspaces": [
+        "web/app"
+    ],
     "scripts": {
         "init": "pnpm cli:build",
         "cli": "./cli/build/cli.exe",
