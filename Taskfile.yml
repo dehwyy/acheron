@@ -1,10 +1,9 @@
-version: '3'
+version: "3"
 
 tasks:
-    build_cli:
-        c3c build --path cli
+  build_cli: c3c build --path cli
 
-    cli:
-        platforms: [windows]
-        cmds:
-          - ./cli/build/cli.exe {{.CLI_ARGS}}
+  cli:
+    platforms: [windows]
+    cmds:
+      - ./cli/build/cli.exe {{.CLI_ARGS}}

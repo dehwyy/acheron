@@ -4,7 +4,7 @@ schema:
 exec:
   package: gqlgen
   layout: single-file # or follow-schema
-  filename: internal/gql/gqlgen/generated.go  # for single-file
+  filename: internal/gql/gqlgen/generated.go # for single-file
   # Only for follow-schema layout:
   # dir: internal/gql/generated
   # filename_template: "{name}.generated.go"
@@ -35,7 +35,6 @@ resolver:
 
   # Only for single-file layout:
   # filename: graph/resolver.go
-
 
   omit_template_comment: true
   # Optional: Pass in a path to a new gotpl template to use for generating resolvers
