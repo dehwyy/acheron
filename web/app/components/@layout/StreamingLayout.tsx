@@ -16,12 +16,9 @@ export function StreamingLayout({ streamName }: Props) {
 
             id="video-player"
             src={streamPath}
-            liveTracker={{
-                liveTolerance: 3,
-            }}
-
             volume={0.6}
             preload="auto"
+            liveui
             autoplay
             controls
         />
