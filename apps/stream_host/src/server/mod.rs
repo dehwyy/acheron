@@ -2,7 +2,7 @@ use std::path::{Path, PathBuf};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 
-use futures::{StreamExt, TryFutureExt, TryStreamExt};
+use futures::{StreamExt, TryFutureExt, TryStreamExt, future};
 use log::{error, info};
 use srt_protocol::settings::KeySettings;
 use srt_tokio::{ConnectionRequest, SrtListener, SrtSocket};
@@ -13,14 +13,15 @@ use tokio::sync::Mutex;
 use tokio::task::JoinHandle;
 use tokio::{fs, time};
 
-// ? Maybe useful: "#EXT-X-DISCONTINUITY" @gpt "Use if switching codecs, resolutions, or timestamp discontinuities."
-// const BUFFER_SIZE: usize = ?;
-const SEGMENT_DURATION: Duration = Duration::from_millis(1_000);
-const SEGMENTS_PER_STREAM: usize = 5;
+// ? Maybe useful: "#EXT-X-DISCONTINUITY" @gpt "Use if switching codecs, resolutions, or timestamp
+// discontinuities." const BUFFER_SIZE: usize = ?;
+// const segment_duration: Duration = Duration::from_millis(2000);
+// const segments_per_stream: usize = 13;
 
 #[derive(Debug)]
 pub enum ServerError {
     FailedToAcceptSrtConnection(io::Error),
+    FailedToDelete,
     FailedToCreate(io::Error),
     FailedToWrite(io::Error),
     ConnectionClosed,
@@ -28,12 +29,16 @@ pub enum ServerError {
 }
 
 pub struct Server {
+    segment_duration: Duration,
+    segments_per_stream: usize,
     content_path: &'static Path,
 }
 
 impl Server {
-    pub fn new() -> Self {
+    pub fn new(segment_duration_ms: u64, segments_per_stream: usize) -> Self {
         Self {
+            segment_duration: Duration::from_millis(segment_duration_ms),
+            segments_per_stream,
             content_path: Path::new("content/streams"),
         }
     }
@@ -41,12 +46,15 @@ impl Server {
     pub async fn start(self, port: u16) -> Result<(), Box<dyn std::error::Error>> {
         let (_server, mut incoming) = SrtListener::builder().bind(port).await?;
 
+        info!("Server: SegmentDuration {dur}, SegmentsPerStream {segments}", dur = self.segment_duration.as_millis(), segments = self.segments_per_stream);
+        info!("Listening on port {}", port);
+
         let shared = Arc::new(self);
         while let Some(connection_req) = incoming.incoming().next().await {
             let shared_clone = shared.clone();
             tokio::spawn(async move {
                 if let Err(err) = shared_clone.handle_srt_connection(connection_req).await {
-                    error!("Error: {:?}", err);
+                    error!("{:?}", err);
                 }
             });
         }
@@ -71,6 +79,8 @@ impl Server {
             .map_err(|e| ServerError::FailedToAcceptSrtConnection(e))?;
 
         let content_path = self.content_path.join(stream_id);
+        // fs::remove_dir_all(&content_path).await.map_err(|e| ServerError::FailedToDelete)?;
+
         fs::create_dir_all(content_path.clone())
             .await
             .map_err(|e| ServerError::FailedToCreate(e))?;
@@ -89,7 +99,7 @@ impl Server {
             match socket.try_next().await {
                 Ok(Some((timestamp, data))) => {
                     info!("Got data: {} bytes", data.len());
-                    if timestamp.duration_since(last_write_time) >= SEGMENT_DURATION {
+                    if timestamp.duration_since(last_write_time) >= self.segment_duration {
                         // Flush previous file
                         segment_file.flush().await.map_err(|e| ServerError::FailedToWrite(e))?;
 
@@ -98,9 +108,7 @@ impl Server {
                         segment_index += 1;
                         segment_file = create_segment_file(segment_index).await?;
 
-                        if segment_index % SEGMENTS_PER_STREAM == 0 {
-                            tokio::spawn(update_m3u8_playlist(content_path.clone(), segment_index));
-                        }
+                        tokio::spawn(update_m3u8_playlist(self.segment_duration, self.segments_per_stream, content_path.clone(), segment_index - 1));
                     }
 
                     segment_file
@@ -109,13 +117,13 @@ impl Server {
                         .map_err(|e| ServerError::FailedToWrite(e))?;
                 },
                 Err(err) => {
-                    error!("Error: {}", err);
+                    error!("WASSSS");
+
                     return Err(ServerError::ConnectionClosed);
-                    // info!("Connection closed: {:?}", v);
                 },
                 Ok(None) => {
-                    error!("Shouldn't be possible");
-                    // TODO: clear folder after stream ned
+                    info!("Connection closed");
+                    fs::remove_dir_all(content_path).await;
                     return Err(ServerError::ConnectionClosed);
                 },
             }
@@ -127,9 +135,21 @@ impl Server {
 
 // TODO: Result<(), SomeError>
 async fn update_m3u8_playlist(
+    segment_duration: Duration,
+    segments_per_stream: usize,
     content_path: PathBuf,
     last_segment_index: usize,
 ) -> Result<(), String> {
+
+    // * Clear unused file
+    if last_segment_index >= segments_per_stream + 5 {
+        tokio::spawn(fs::remove_file(
+            content_path
+                .clone()
+                .join(format!("segment_{idx}.ts", idx = last_segment_index - segments_per_stream - 5 )),
+        ));
+    }
+
     let mut playlist = File::options()
         .truncate(true)
         .create(true)
@@ -139,48 +159,36 @@ async fn update_m3u8_playlist(
         .await
         .map_err(|e| e.to_string())?;
 
-    if last_segment_index < SEGMENTS_PER_STREAM-1 {
-        return Ok(());
-    }
-    // TODO: Clear previous files
+    // * Write .m3u8 header.
+    // ? [
+    // ?     "#EXTM3U",
+    // ?     "#EXT-X-VERSION:3",
+    // ?     "#EXT-X-TARGETDURATION:<Duration in seconds>",
+    // ?     "#EXT-X-MEDIA-SEQUENCE:<last_segment_index>",
+    // ? ]
 
-    playlist
-        .write(
-            // Same as
-            // [
-            //     "#EXTM3U",
-            //     "#EXT-X-VERSION:3",
-            //     "#EXT-X-TARGETDURATION:3",
-            //     &format!("#EXT-X-MEDIA-SEQUENCE:{}", last_segment_index),
-            // ]
-            // .join("\n")
+    let mut buf = vec![];
+    buf.extend_from_slice(
             format!(
                 "#EXTM3U\n#EXT-X-VERSION:3\n#EXT-X-TARGETDURATION:{duration}\n#EXT-X-MEDIA-SEQUENCE:{first_segment_index}\n",
-                duration=SEGMENT_DURATION.as_millis().div_ceil(1000),
-                first_segment_index=last_segment_index-SEGMENTS_PER_STREAM
+                duration=segment_duration.as_millis().div_ceil(1000),
+                first_segment_index=last_segment_index.saturating_sub(segments_per_stream)
+            )
+            .as_bytes(),
+    );
+
+    for idx in last_segment_index.saturating_sub(segments_per_stream)..=last_segment_index {
+        buf.extend_from_slice(
+            format!(
+                "#EXTINF:{duration:.3},\n{filename}\n",
+                duration = segment_duration.as_secs_f32(),
+                filename = format!("segment_{idx}.ts")
             )
             .as_bytes(),
         )
-        .await
-        .map_err(|e| e.to_string())?;
-
-    for i in last_segment_index - SEGMENTS_PER_STREAM..=last_segment_index {
-        if i == 0 {
-
-        }
-
-        playlist
-            .write(
-                format!(
-                    "#EXTINF:{duration:.3},\n{filename}\n",
-                    duration=SEGMENT_DURATION.as_secs_f32(),
-                    filename=format!("segment_{i}.ts")
-                )
-                .as_bytes(),
-            )
-            .await
-            .map_err(|e| e.to_string())?;
     }
+
+    playlist.write_all(&buf).await.map_err(|e| e.to_string())?;
 
     Ok(())
 }
