@@ -1,5 +1,4 @@
 mod server;
-use std::env;
 
 use server::Server;
 
@@ -14,11 +13,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let addr_cfg = config::new::<config::Addr>();
     let port = addr_cfg.ports().srt_server;
 
-    let mut args = env::args();
-    let srv = Server::new(
-        args.nth(1).map(|v| v.parse::<u64>().unwrap()).unwrap_or(2000),
-        args.nth(0).map(|v| v.parse::<usize>().unwrap()).unwrap_or(15),
-    );
+    let m3u8_config = config::new::<config::M3u8>();
+
+
+    let srv = Server::new(m3u8_config);
 
     match tokio::try_join!(srv.start(port),) {
         Ok((_,)) => info!("All done!"),
