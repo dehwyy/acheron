@@ -15,6 +15,7 @@ pub struct M3u8{
     pub m3u8: M3u8Config,
 }
 
+// Polymorphism in Rust hahaha
 impl Deref for M3u8 {
     type Target = M3u8Config;
     fn deref(&self) -> &Self::Target {

@@ -10,6 +10,6 @@ pub fn new_env<T>() -> T
 where
     T: Env,
 {
-    dotenv::from_path(T::filepath.to_string()).expect("Failed to load environment variables.");
+    dotenv::from_path(T::FILEPATH.to_string()).expect("Failed to load environment variables.");
     T::init_from_env().expect("Cannot initialize config from env.")
 }

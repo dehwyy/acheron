@@ -1,5 +1,3 @@
-use std::ops::Deref;
-
 use serde::Deserialize;
 
 #[derive(Deserialize)]
@@ -14,14 +12,6 @@ pub struct Addr {
 
 impl Addr {
     pub fn ports(&self) -> &Ports {
-        &self.ports
-    }
-}
-
-// Polymorphism in Rust hahaha
-impl Deref for Addr {
-    type Target = Ports;
-    fn deref(&self) -> &Self::Target {
         &self.ports
     }
 }

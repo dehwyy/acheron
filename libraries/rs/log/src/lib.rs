@@ -1,6 +1,3 @@
-use std::env;
-
-use tracing::*;
 pub use tracing::{debug, error, info, trace, warn};
 use tracing_subscriber::FmtSubscriber;
 use tracing_subscriber::fmt::time::ChronoLocal;

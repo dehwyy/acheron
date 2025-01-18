@@ -18,7 +18,7 @@ where
 
 fn read_file<T: Parsable>() -> Vec<u8> {
     let mut filebuf = vec![];
-    File::open(T::filepath.to_string())
+    File::open(T::FILEPATH.to_string())
         .expect("Failed to open config file.")
         .read_to_end(&mut filebuf)
         .expect("Failed to read config file.");

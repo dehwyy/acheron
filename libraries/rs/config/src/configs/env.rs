@@ -1,5 +1,3 @@
-use std::env;
-
 use envconfig::Envconfig;
 
 use crate::parse::ConfigFormat;
@@ -13,6 +11,6 @@ pub struct Config {
 }
 
 impl crate::parse::Parsable for Config {
-    const filepath: Path<'_> = Path::new_file(".env");
-    const format: ConfigFormat = ConfigFormat::Env;
+    const FILEPATH: Path<'_> = Path::new_file(".env");
+    const FORMAT: ConfigFormat = ConfigFormat::Env;
 }
