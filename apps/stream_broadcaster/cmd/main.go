@@ -1,10 +1,9 @@
 package main
 
 import (
-	"github.com/dehwyy/mugen/apps/stream_broadcaster/internal/gql"
-	"github.com/dehwyy/mugen/apps/stream_broadcaster/internal/gql/gqlgen"
-	"github.com/dehwyy/mugen/apps/stream_broadcaster/internal/gql/resolvers"
+	"github.com/dehwyy/mugen/apps/stream_broadcaster/internal/repos"
 	"github.com/dehwyy/mugen/apps/stream_broadcaster/internal/server"
+	"github.com/dehwyy/mugen/apps/stream_broadcaster/internal/server/routers"
 	"github.com/dehwyy/mugen/libraries/go/config"
 	"github.com/dehwyy/mugen/libraries/go/logg"
 	"go.uber.org/fx"
@@ -13,13 +12,15 @@ import (
 func main() {
 	fx.New(
 		fx.Provide(
-			config.New(config.Opts{}),
+			config.New(config.ConfigConstructorParams{}),
 			logg.New(logg.Opts{
 				ServiceName: "stream_broadcaster",
 			}),
-			fx.Annotate(resolvers.New, fx.As(new(gqlgen.ResolverRoot))),
-			server.NewFx,
 		),
-		fx.Invoke(gql.NewFx),
+		// repositories
+		fx.Provide(repos.NewFileRepoFx),
+		// routers
+		fx.Provide(routers.NewPlaylistRouterFx),
+		fx.Invoke(server.NewFx),
 	).Run()
 }

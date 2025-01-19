@@ -8,7 +8,7 @@ interface Props {
 
 export function StreamingLayout({ streamName }: Props) {
     const streamPath = useMemo(() => {
-        return `http://localhost:8081/${streamName}/playlist.m3u8`
+        return `http://localhost:8081/api/v1/${streamName}/playlist.m3u8`
     }, [streamName])
 
     return (

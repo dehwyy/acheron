@@ -1,8 +1,0 @@
-type Query
-# type Mutation
-
-scalar Byte
-scalar Bytes
-scalar Upload
-scalar Time
-scalar UUID
