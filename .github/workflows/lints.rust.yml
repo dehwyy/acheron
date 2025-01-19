@@ -1,4 +1,4 @@
-name: Lints
+name: rust-lints
 
 on:
   push:
