@@ -3,7 +3,6 @@ use std::io;
 
 use super::transport_stream::SegmentFileError;
 
-
 pub enum M3u8Error {
     InitializationError(io::Error),
     ClearError(io::Error),

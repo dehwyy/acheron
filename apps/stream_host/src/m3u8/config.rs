@@ -1,4 +1,5 @@
-use std::{path::PathBuf, time::Duration};
+use std::path::PathBuf;
+use std::time::Duration;
 
 #[derive(Clone, Debug)]
 pub struct M3u8Config {

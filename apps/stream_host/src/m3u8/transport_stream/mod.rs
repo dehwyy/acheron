@@ -1,11 +1,10 @@
 use std::path::PathBuf;
 use std::time::Instant;
 
-use tokio::fs::{File};
+use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
 
 pub mod utils;
-
 
 mod errors;
 pub use errors::*;

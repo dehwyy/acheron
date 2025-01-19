@@ -11,7 +11,7 @@ pub struct M3u8Config {
 }
 
 #[derive(Deserialize)]
-pub struct M3u8{
+pub struct M3u8 {
     pub m3u8: M3u8Config,
 }
 

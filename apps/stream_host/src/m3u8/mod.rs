@@ -1,6 +1,5 @@
 use std::time::Instant;
 
-
 mod transport_stream;
 use log::error;
 use transport_stream::SegmentFile;
@@ -56,7 +55,6 @@ impl M3u8 {
                 if let Err(e) = update {
                     error!("Failed to update playlist: {e}");
                 }
-
             });
         }
 

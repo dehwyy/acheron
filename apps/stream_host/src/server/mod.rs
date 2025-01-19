@@ -6,7 +6,6 @@ use log::{error, info};
 use srt_protocol::settings::KeySettings;
 use srt_tokio::{ConnectionRequest, SrtListener, SrtSocket};
 
-
 use crate::m3u8::{M3u8, M3u8Config};
 
 // ? Maybe useful: "#EXT-X-DISCONTINUITY" @gpt "Use if switching codecs, resolutions, or timestamp
@@ -51,7 +50,7 @@ impl Server {
                     },
                     Err(err) => {
                         error!("Connection error: {}", err);
-                    }
+                    },
                 }
             });
         }

@@ -3,8 +3,8 @@ use std::time::Instant;
 use tokio::fs::{self, File};
 use tokio::io::AsyncWriteExt;
 
-use super::{M3u8Config, M3u8Error};
 use super::transport_stream::{SegmentMetadata, utils};
+use super::{M3u8Config, M3u8Error};
 
 const PLAYLIST_FILE: &str = "playlist.m3u8";
 
@@ -44,7 +44,9 @@ impl M3u8FilesManager {
                 - (self.config.segments_per_stream + n) as isize;
 
             if idx >= 0 {
-                utils::remove_segment(self.segment_metadata.directory.clone(), idx as usize).await.map_err(|e| M3u8Error::ClearError(e))?;
+                utils::remove_segment(self.segment_metadata.directory.clone(), idx as usize)
+                    .await
+                    .map_err(|e| M3u8Error::ClearError(e))?;
             }
         }
 

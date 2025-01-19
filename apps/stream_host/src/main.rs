@@ -15,7 +15,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     let m3u8_config = config::new::<config::M3u8>();
 
-
     let srv = Server::new(m3u8_config);
 
     match tokio::try_join!(srv.start(port),) {

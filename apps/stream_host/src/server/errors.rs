@@ -5,12 +5,12 @@ use crate::m3u8::M3u8Error;
 pub enum ConnectionError {
     AuthorizationError(AuthorizationError),
     M3u8Error(M3u8Error),
-    InternalError
+    InternalError,
 }
 
 pub enum AuthorizationError {
     StreamIdNotProvided,
-    FailedToAcceptConnection
+    FailedToAcceptConnection,
 }
 
 impl Display for ConnectionError {
@@ -23,13 +23,13 @@ impl Display for ConnectionError {
     }
 }
 
-
-
 impl Display for AuthorizationError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             AuthorizationError::StreamIdNotProvided => write!(f, "Stream ID not provided!"),
-            AuthorizationError::FailedToAcceptConnection => write!(f, "Failed to accept connection!"),
+            AuthorizationError::FailedToAcceptConnection => {
+                write!(f, "Failed to accept connection!")
+            },
         }
     }
 }
