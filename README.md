@@ -6,6 +6,7 @@
 - No freezes.
 - High quality (there are limitations, I guess).
 - ***120***  FPS.
+- ***Use FFmpeg AAC as audio encoder!*** . Otherwise audio won't work (not investigated yet)! *P.S.* on **2nd** screenshot other codec is set.
 
 ### OBS Stream Settings
 <img src="docs/screenshots/obs_stream_settings.jpg">
