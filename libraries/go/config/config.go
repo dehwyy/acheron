@@ -39,8 +39,6 @@ type ConfigConstructorParams struct {
 	TomlConfigFilePath string `tags:"optional"`
 }
 
-type Opts = ConfigConstructorParams
-
 func New(params ConfigConstructorParams) func() Config {
 	tomlFilepath := or(params.TomlConfigFilePath, tomlConfigFilepath)
 
