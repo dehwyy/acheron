@@ -7,7 +7,7 @@ import (
 
 type Byte byte
 
-func (b *Byte) UnmarshalGQL(v interface{}) error {
+func (b *Byte) UnmarshalGQL(v any) error {
 	castedValue, ok := v.(byte)
 	if !ok {
 		return fmt.Errorf("cannot cast %v to []byte", v)

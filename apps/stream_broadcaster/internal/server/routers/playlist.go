@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	contentTypeApplicationMpegUrl = "application/vnd.apple.mpegurl"
+	contentTypeApplicationMpegURL = "application/vnd.apple.mpegurl"
 	contentTypeMpegTs             = "video/MP2T" // ? Twitch uses `application/octet-stream` though
 
 	streamName  = "streamName"
@@ -42,7 +42,7 @@ func (r *PlaylistRouter) getM3u8Playlist(ctx *gin.Context) {
 		r.Log.Error().Msgf("Failed to read playlist: %v", err)
 
 		statusCode := http.StatusInternalServerError
-		if errors.Is(err, repos.ErrorFileNotFound) {
+		if errors.Is(err, repos.ErrFileNotFound) {
 			statusCode = http.StatusNotFound
 		}
 
@@ -50,7 +50,7 @@ func (r *PlaylistRouter) getM3u8Playlist(ctx *gin.Context) {
 		return
 	}
 
-	ctx.Data(http.StatusOK, contentTypeApplicationMpegUrl, playlistFiledata)
+	ctx.Data(http.StatusOK, contentTypeApplicationMpegURL, playlistFiledata)
 }
 
 func (r *PlaylistRouter) getSegment(ctx *gin.Context) {
@@ -61,7 +61,7 @@ func (r *PlaylistRouter) getSegment(ctx *gin.Context) {
 		r.Log.Error().Msgf("Failed to read segment: %v", err)
 
 		statusCode := http.StatusInternalServerError
-		if errors.Is(err, repos.ErrorFileNotFound) {
+		if errors.Is(err, repos.ErrFileNotFound) {
 			statusCode = http.StatusNotFound
 		}
 

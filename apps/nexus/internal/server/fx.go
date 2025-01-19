@@ -39,7 +39,7 @@ func NewFx(opts Opts) *Server {
 		OnStart: func(ctx context.Context) error {
 			go func() {
 				opts.Log.Info().Msg("Starting server...")
-				r.Start(ctx, opts.Config.Addr().Ports.Nexus)
+				opts.Log.Fatal().Msgf("%v", r.Start(ctx, opts.Config.Addr().Ports.Nexus))
 			}()
 			return nil
 		},

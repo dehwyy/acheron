@@ -14,7 +14,7 @@ const (
 )
 
 var (
-	ErrorFileNotFound = os.ErrNotExist
+	ErrFileNotFound = os.ErrNotExist
 )
 
 type FileRepository struct {

@@ -4,7 +4,7 @@ import (
 	"io"
 	"os"
 
-	"github.com/BurntSushi/toml"
+	"github.com/pelletier/go-toml/v2"
 )
 
 func readFileOrPanic(path string) []byte {

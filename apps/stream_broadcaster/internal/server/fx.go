@@ -48,7 +48,7 @@ func NewFx(opts Opts) *Server {
 				opts.Log.Debug().Msgf("Provided config: %s", opts.Config)
 				opts.Log.Info().Msg("Starting server...")
 
-				r.Start(ctx, opts.Config.Addr().Ports.StreamBroadcasterPort)
+				opts.Log.Fatal().Msgf("%v", r.Start(ctx, opts.Config.Addr().Ports.StreamBroadcasterPort))
 			}()
 			return nil
 		},
