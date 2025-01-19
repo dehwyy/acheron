@@ -8,7 +8,7 @@ use log::{Logger, error, info};
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    Logger::with_config(log::LoggerConfig::new().sentry(false));
+    Logger::initialize_with_config(log::LoggerConfig::new().sentry(false));
 
     let addr_cfg = config::new::<config::Addr>();
     let port = addr_cfg.ports().srt_server;

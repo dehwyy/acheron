@@ -27,7 +27,7 @@ impl M3u8 {
         Ok(Self {
             segment: SegmentFile::try_new(manager.segment_metadata.directory.clone())
                 .await
-                .map_err(|e| M3u8Error::SegmentError(e))?,
+                .map_err(M3u8Error::SegmentError)?,
             manager,
         })
     }
@@ -37,7 +37,7 @@ impl M3u8 {
             self.segment
                 .try_next(&mut self.manager.segment_metadata.segment_index)
                 .await
-                .map_err(|e| M3u8Error::SegmentError(e))?;
+                .map_err(M3u8Error::SegmentError)?;
 
             self.manager.segment_metadata.last_write = timestamp;
 
@@ -58,7 +58,7 @@ impl M3u8 {
             });
         }
 
-        self.segment.write(data).await.map_err(|e| M3u8Error::SegmentError(e))?;
+        self.segment.write(data).await.map_err(M3u8Error::SegmentError)?;
 
         Ok(())
     }

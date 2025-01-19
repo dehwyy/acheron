@@ -81,13 +81,12 @@ impl Server {
         self: Arc<Self>,
         conn: ConnectionRequest,
     ) -> Result<ConnectionStatus, ConnectionError> {
-        let (mut socket, stream_id) = Self::authorize_connecton(conn)
-            .await
-            .map_err(|e| ConnectionError::AuthorizationError(e))?;
+        let (mut socket, stream_id) =
+            Self::authorize_connecton(conn).await.map_err(ConnectionError::AuthorizationError)?;
 
         let mut playlist = M3u8::try_new(self.m3u8_config.clone(), stream_id)
             .await
-            .map_err(|e| ConnectionError::M3u8Error(e))?;
+            .map_err(ConnectionError::M3u8Error)?;
 
         loop {
             match socket.try_next().await {
@@ -100,7 +99,7 @@ impl Server {
                     return Err(ConnectionError::InternalError);
                 },
                 Ok(None) => {
-                    playlist.clear().await.map_err(|e| ConnectionError::M3u8Error(e))?;
+                    playlist.clear().await.map_err(ConnectionError::M3u8Error)?;
                     return Ok(ConnectionStatus::ConnectionClosed);
                 },
             }

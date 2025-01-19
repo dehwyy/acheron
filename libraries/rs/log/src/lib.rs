@@ -9,7 +9,7 @@ pub use config::LoggerConfig;
 pub struct Logger;
 
 impl Logger {
-    pub fn with_config(config: LoggerConfig) {
+    pub fn initialize_with_config(config: LoggerConfig) {
         let fmt_subscriber = FmtSubscriber::builder()
             .pretty()
             .with_target(config.with_target)
@@ -26,7 +26,7 @@ impl Logger {
         }
     }
 
-    pub fn new() {
+    pub fn initialize() {
         let is_prod = std::env::var("PRODUCTION").map(|v| v == "TRUE").unwrap_or(false);
 
         let cfg = match is_prod {
@@ -34,6 +34,6 @@ impl Logger {
             false => LoggerConfig::new(),
         };
 
-        Logger::with_config(cfg)
+        Logger::initialize_with_config(cfg)
     }
 }

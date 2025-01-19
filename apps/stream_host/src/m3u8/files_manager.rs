@@ -29,13 +29,11 @@ impl M3u8FilesManager {
     pub async fn initialize(&self) -> Result<(), M3u8Error> {
         fs::create_dir_all(&self.segment_metadata.directory)
             .await
-            .map_err(|e| M3u8Error::InitializationError(e))
+            .map_err(M3u8Error::InitializationError)
     }
 
     pub async fn clear(self) -> Result<(), M3u8Error> {
-        fs::remove_dir_all(self.segment_metadata.directory)
-            .await
-            .map_err(|e| M3u8Error::ClearError(e))
+        fs::remove_dir_all(self.segment_metadata.directory).await.map_err(M3u8Error::ClearError)
     }
 
     pub(super) async fn clear_unused(&self) -> Result<(), M3u8Error> {
@@ -46,7 +44,7 @@ impl M3u8FilesManager {
             if idx >= 0 {
                 utils::remove_segment(self.segment_metadata.directory.clone(), idx as usize)
                     .await
-                    .map_err(|e| M3u8Error::ClearError(e))?;
+                    .map_err(M3u8Error::ClearError)?;
             }
         }
 
@@ -60,7 +58,7 @@ impl M3u8FilesManager {
             .write(true)
             .open(self.segment_metadata.directory.join(PLAYLIST_FILE))
             .await
-            .map_err(|e| M3u8Error::OpenPlaylistFileError(e))?;
+            .map_err(M3u8Error::OpenPlaylistFileError)?;
 
         let mut buf = vec![];
 
