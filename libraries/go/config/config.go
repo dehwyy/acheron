@@ -1,41 +1,54 @@
 package config
 
-import "github.com/dehwyy/mugen/libraries/go/config/configs"
+import (
+	"fmt"
+
+	"github.com/dehwyy/mugen/libraries/go/config/configs"
+	"github.com/dehwyy/mugen/libraries/go/config/parser"
+)
 
 const (
 	tomlConfigFilepath = "config/config.toml"
 	envConfigFilepath  = ".env"
 )
 
-type Config interface {
-	Addr() *configs.Addr
-	Env() *configs.EnvConfig
-}
-
-type GlobalConfig struct {
+type globalConfig struct {
 	addr *configs.Addr
+	m3u8 *configs.M3u8
 	env  *configs.EnvConfig
 }
 
-func (c *GlobalConfig) Addr() *configs.Addr {
+func (c *globalConfig) Addr() *configs.Addr {
 	return c.addr
 }
 
-func (c *GlobalConfig) Env() *configs.EnvConfig {
+func (c *globalConfig) Env() *configs.EnvConfig {
 	return c.env
 }
 
-type Opts struct {
+func (c *globalConfig) M3u8() *configs.M3u8Config {
+	return &c.m3u8.Inner
+}
+
+func (c *globalConfig) String() string {
+	return fmt.Sprintf("addr: %+v, m3u8: %+v, env: %+v", c.Addr(), c.M3u8(), c.Env())
+}
+
+type ConfigConstructorParams struct {
 	EnvFilePath        string `tags:"optional"`
 	TomlConfigFilePath string `tags:"optional"`
 }
 
-func New(opts Opts) func() Config {
+type Opts = ConfigConstructorParams
+
+func New(params ConfigConstructorParams) func() Config {
+	tomlFilepath := or(params.TomlConfigFilePath, tomlConfigFilepath)
 
 	return func() Config {
-		return &GlobalConfig{
-			addr: configs.NewAddrConfig(or(opts.TomlConfigFilePath, tomlConfigFilepath)),
-			env:  configs.NewEnvConfig(or(opts.EnvFilePath, envConfigFilepath)),
+		return &globalConfig{
+			addr: parser.ReadAndParse[configs.Addr](tomlFilepath),
+			m3u8: parser.ReadAndParse[configs.M3u8](tomlFilepath),
+			env:  configs.NewEnvConfig(or(params.EnvFilePath, envConfigFilepath)),
 		}
 	}
 }
