@@ -11,7 +11,7 @@ import (
 	"go.uber.org/fx"
 )
 
-type Logger = zerolog.Logger
+type Logger = *zerolog.Logger
 
 type Opts struct {
 	ServiceName string
@@ -52,5 +52,5 @@ func NewFx(p Params) Logger {
 	logger := zerolog.New(out).With().Caller().Timestamp().Logger()
 
 	logger.Hook(newHooks(hookOpts{p.Sentry})...)
-	return logger
+	return &logger
 }
