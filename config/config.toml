@@ -1,4 +1,5 @@
 [ports]
+nexus = 4444
 srt_server = 2233
 stream_broadcaster = 8081
 

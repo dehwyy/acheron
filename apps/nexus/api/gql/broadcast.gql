@@ -1,0 +1,14 @@
+extend type Query {
+	getStream(req: StreamRequest!): StreamResponse!
+}
+
+
+input StreamRequest {
+	id: String!
+	frame: Int!
+}
+
+type StreamResponse {
+	data: Bytes!
+	id: String!
+}
