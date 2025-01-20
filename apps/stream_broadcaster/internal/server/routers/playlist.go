@@ -18,8 +18,8 @@ const (
 
 	PlaylistRouterPath = "/:" + streamName
 
-	getPlaylistPath = "/playlist.m3u8"
-	getSegmentPath  = "/:" + segmentName
+	routeGetPlaylistPath = "/playlist.m3u8"
+	routeGetSegmentPath  = "/:" + segmentName
 )
 
 type PlaylistRouter struct {
@@ -30,8 +30,8 @@ type PlaylistRouter struct {
 func (r *PlaylistRouter) RegisterRoutes(baseRouter *gin.RouterGroup) {
 	router := baseRouter.Group(PlaylistRouterPath)
 
-	router.GET(getPlaylistPath, r.getM3u8Playlist)
-	router.GET(getSegmentPath, r.getSegment)
+	router.GET(routeGetPlaylistPath, r.getM3u8Playlist)
+	router.GET(routeGetSegmentPath, r.getSegment)
 }
 
 func (r *PlaylistRouter) getM3u8Playlist(ctx *gin.Context) {
