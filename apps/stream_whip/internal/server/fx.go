@@ -1,0 +1,48 @@
+package server
+
+import (
+	"context"
+
+	"github.com/dehwyy/mugen/apps/stream_whip/internal/server/routers"
+	"github.com/dehwyy/mugen/libraries/go/config"
+	"github.com/dehwyy/mugen/libraries/go/logg"
+	"github.com/gin-gonic/gin"
+	"go.uber.org/fx"
+)
+
+type ServerParams struct {
+	fx.In
+
+	LC     fx.Lifecycle
+	Config config.Config
+	Log    logg.Logger
+
+	WhipWhepRouter *routers.WhipWhepRouter
+}
+
+func NewFx(params ServerParams) *Server {
+	r := &Server{
+		gin.New(),
+	}
+
+	r.StaticFile("/", "./apps/stream_whip/cmd/index.html")
+
+	v1 := r.Group("/api/v1")
+
+	params.WhipWhepRouter.RegisterRoutes(v1)
+
+	params.LC.Append(fx.Hook{
+		OnStart: func(ctx context.Context) error {
+			go func() {
+				params.Log.Fatal().Msgf("%v", r.Start(ctx, 8080)) // TODO: Port -> Config
+			}()
+
+			return nil
+		},
+		OnStop: func(ctx context.Context) error {
+			return r.Stop(ctx)
+		},
+	})
+
+	return r
+}
