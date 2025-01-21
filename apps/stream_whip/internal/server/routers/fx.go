@@ -1,6 +1,7 @@
 package routers
 
 import (
+	"github.com/dehwyy/mugen/apps/stream_whip/internal/rtc"
 	"github.com/dehwyy/mugen/libraries/go/logg"
 	"go.uber.org/fx"
 )
@@ -12,7 +13,13 @@ type WhipWhepRouterParams struct {
 }
 
 func NewWhipWhepRouterFx(params WhipWhepRouterParams) *WhipWhepRouter {
+	api, err := rtc.NewAPI()
+	if err != nil {
+		panic(err)
+	}
+
 	return &WhipWhepRouter{
 		log: params.Log,
+		api: api,
 	}
 }
