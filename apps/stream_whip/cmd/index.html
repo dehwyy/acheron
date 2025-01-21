@@ -27,6 +27,7 @@
 
   window.doWHEP = () => {
     peerConnection.addTransceiver('video', { direction: 'recvonly' })
+    peerConnection.addTransceiver('audio', { direction: 'recvonly' })
 
     peerConnection.ontrack = function (event) {
       document.getElementById('videoPlayer').srcObject = event.streams[0]
