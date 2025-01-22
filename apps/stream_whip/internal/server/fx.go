@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 
+	"github.com/dehwyy/mugen/apps/stream_whip/internal/server/middleware"
 	"github.com/dehwyy/mugen/apps/stream_whip/internal/server/routers"
 	"github.com/dehwyy/mugen/libraries/go/config"
 	"github.com/dehwyy/mugen/libraries/go/logg"
@@ -24,10 +25,11 @@ func NewFx(params ServerParams) *Server {
 	r := &Server{
 		gin.New(),
 	}
-
 	r.StaticFile("/", "./apps/stream_whip/cmd/index.html")
 
 	v1 := r.Group("/api/v1")
+
+	v1.Use(middleware.NewLoggerMiddleware(params.Log))
 
 	params.WhipWhepRouter.RegisterRoutes(v1)
 
