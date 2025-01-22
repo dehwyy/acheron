@@ -1,8 +1,11 @@
 package whipwhep
 
 import (
+	"errors"
+	"fmt"
+
 	eventhandlers "github.com/dehwyy/mugen/apps/stream_whip/internal/rtc/event-handlers"
-	"github.com/dehwyy/mugen/apps/stream_whip/internal/rtc/tracks"
+	"github.com/dehwyy/mugen/apps/stream_whip/internal/rtc/mediastream"
 	"github.com/pion/webrtc/v4"
 )
 
@@ -47,12 +50,15 @@ func HandleWhipConn(conn *webrtc.PeerConnection, streamToken, offer string) (str
 		return "", err
 	}
 
-	audioTrack, videoTrack, err := tracks.NewDefaultAudioVideoTracks(streamToken)
+	mediaStream, err := mediastream.New(streamToken, mediastream.AudioVideo)
 	if err != nil {
-		return "", err
+		if errors.Is(err, mediastream.ErrAlreadyExists) {
+			return "", fmt.Errorf("%w: token = %s", err, streamToken)
+		}
+		return "", fmt.Errorf("failed to create media stream: %w", err)
 	}
 
-	conn.OnTrack(eventhandlers.NewOnTrackHandler(audioTrack, videoTrack))
+	conn.OnTrack(eventhandlers.NewOnTrackHandler(mediaStream))
 
 	return exchangeSDPOffers(conn, offer)
 }
@@ -60,13 +66,20 @@ func HandleWhipConn(conn *webrtc.PeerConnection, streamToken, offer string) (str
 // @Returns:
 //   - LocalSDPOffer: string
 func HandleWhepConn(conn *webrtc.PeerConnection, streamToken, offer string) (string, error) {
-	audioRtpSender, videoRtpSender, err := tracks.AddAudioVideoTracks(conn, streamToken)
+	mediaStream, err := mediastream.Get(streamToken)
 	if err != nil {
-		return "", nil
+		if errors.Is(err, mediastream.ErrNotExists) {
+			return "", fmt.Errorf("%w: token = %s", err, streamToken)
+		}
+		return "", fmt.Errorf("failed to get media stream: %w", err)
 	}
 
-	go audioRtpSender.ReadIncoming()
-	go videoRtpSender.ReadIncoming()
+	rtpSender, err := mediaStream.AddToPeerConnection(conn)
+	if err != nil {
+		return "", err
+	}
+
+	rtpSender.SpawnAckIncomingRTCP()
 
 	return exchangeSDPOffers(conn, offer)
 }

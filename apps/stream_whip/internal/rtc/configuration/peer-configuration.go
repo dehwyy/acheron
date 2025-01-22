@@ -3,6 +3,7 @@ package configuration
 import "github.com/pion/webrtc/v4"
 
 var (
+	// https://w3c.github.io/webrtc-pc/#rtcconfiguration-dictionary
 	PeerConnectionConfiguration = webrtc.Configuration{
 		ICEServers: []webrtc.ICEServer{
 			{

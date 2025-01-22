@@ -1,10 +1,11 @@
 package eventhandlers
 
 import (
+	"github.com/dehwyy/mugen/apps/stream_whip/internal/rtc/mediastream"
 	"github.com/pion/webrtc/v4"
 )
 
-func NewOnTrackHandler(audioTrack, videoTrack *webrtc.TrackLocalStaticRTP) func(*webrtc.TrackRemote, *webrtc.RTPReceiver) {
+func NewOnTrackHandler(mediaStream *mediastream.MediaStream) func(*webrtc.TrackRemote, *webrtc.RTPReceiver) {
 	return func(track *webrtc.TrackRemote, recv *webrtc.RTPReceiver) {
 		for {
 			pkt, _, err := track.ReadRTP()
@@ -15,14 +16,13 @@ func NewOnTrackHandler(audioTrack, videoTrack *webrtc.TrackLocalStaticRTP) func(
 			switch pkt.PayloadType {
 			// H264
 			case 96:
-
-				if err = videoTrack.WriteRTP(pkt); err != nil {
+				if err = mediaStream.Video.WriteRTP(pkt); err != nil {
 					panic(err)
 				}
 			// Opus
 			case 111:
 
-				if err = audioTrack.WriteRTP(pkt); err != nil {
+				if err = mediaStream.Audio.WriteRTP(pkt); err != nil {
 					panic(err)
 				}
 			}

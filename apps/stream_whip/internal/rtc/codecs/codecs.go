@@ -7,6 +7,9 @@ const (
 	VideoH264ID = 96
 )
 
+// RTPCodecParameters: https://w3c.github.io/webrtc-pc/#rtcrtpcodecparameters
+// RTPCodecCapability: https://w3c.github.io/webrtc-pc/#rtcrtpcapabilities
+
 var (
 	PresetAudioOpus = webrtc.RTPCodecParameters{
 		RTPCodecCapability: webrtc.RTPCodecCapability{

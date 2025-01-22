@@ -93,5 +93,5 @@ func (*WhipWhepRouter) handleWhep(ctx *gin.Context) {
 	}
 
 	ctx.Header("Location", "/whep")
-	ctx.String(http.StatusAccepted, "%s", sdpAnswer)
+	ctx.String(http.StatusCreated, "%s", sdpAnswer)
 }

@@ -29,7 +29,6 @@ func GetAuthorizationToken(ctx *gin.Context) (string, error) {
 		return "", ErrInvalidAuthorizatioToken
 	}
 
-	fmt.Println(tokens[0])
 
 	return tokens[1], nil
 }
