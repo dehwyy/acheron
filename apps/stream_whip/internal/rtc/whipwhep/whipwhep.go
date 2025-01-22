@@ -36,7 +36,9 @@ func exchangeSDPOffers(conn *webrtc.PeerConnection, offer string) (string, error
 
 // @Returns:
 //   - LocalSDPOffer: string
-func HandleWhipConn(conn *webrtc.PeerConnection, streamToken, offer string) (desc string, err error) {
+func HandleWhipConn(conn *webrtc.PeerConnection, streamToken, offer string) (string, error) {
+	var err error
+
 	if _, err = conn.AddTransceiverFromKind(webrtc.RTPCodecTypeVideo); err != nil {
 		return "", err
 	}
@@ -57,7 +59,7 @@ func HandleWhipConn(conn *webrtc.PeerConnection, streamToken, offer string) (des
 
 // @Returns:
 //   - LocalSDPOffer: string
-func HandleWhepConn(conn *webrtc.PeerConnection, streamToken, offer string) (desc string, err error) {
+func HandleWhepConn(conn *webrtc.PeerConnection, streamToken, offer string) (string, error) {
 	audioRtpSender, videoRtpSender, err := tracks.AddAudioVideoTracks(conn, streamToken)
 	if err != nil {
 		return "", nil

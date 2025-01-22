@@ -1,6 +1,7 @@
 package rtc
 
 import (
+	"github.com/dehwyy/mugen/apps/stream_whip/internal/rtc/configuration"
 	"github.com/pion/webrtc/v4"
 )
 
@@ -19,7 +20,7 @@ func NewAPI() (*API, error) {
 
 	return &API{
 		webrtcAPI:         api,
-		peerConfiguration: &peerConnectionConfiguration,
+		peerConfiguration: &configuration.PeerConnectionConfiguration,
 	}, nil
 }
 

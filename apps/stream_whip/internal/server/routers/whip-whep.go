@@ -1,18 +1,23 @@
 package routers
 
 import (
-	"io"
 	"net/http"
 
 	"github.com/dehwyy/mugen/apps/stream_whip/internal/rtc"
 	"github.com/dehwyy/mugen/apps/stream_whip/internal/rtc/whipwhep"
+	"github.com/dehwyy/mugen/apps/stream_whip/internal/server/extractors"
 	"github.com/dehwyy/mugen/libraries/go/logg"
 	"github.com/gin-gonic/gin"
+	"github.com/pion/webrtc/v4"
 )
 
 const (
 	routeHandleWhip = "/whip"
 	routeHandleWhep = "/whep"
+
+	ctxOffer = "offer"
+	ctxToken = "token"
+	ctxConn  = "conn"
 )
 
 type WhipWhepRouter struct {
@@ -21,50 +26,70 @@ type WhipWhepRouter struct {
 }
 
 func (r *WhipWhepRouter) RegisterRoutes(baseRouter *gin.RouterGroup) {
-	baseRouter.Any(routeHandleWhip, r.handleWhip)
-	baseRouter.Any(routeHandleWhep, r.handleWhep)
+	router := baseRouter.Group("/")
+	router.Use(r.prepareConnection())
+
+	router.POST(routeHandleWhip, r.handleWhip)
+	router.POST(routeHandleWhep, r.handleWhep)
 }
 
-func (r *WhipWhepRouter) handleWhip(ctx *gin.Context) {
-	offer, err := io.ReadAll(ctx.Request.Body)
-	if err != nil {
-		panic(err)
+// Middleware
+func (r *WhipWhepRouter) prepareConnection() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		offer, err := extractors.BodyToString(ctx.Request.Body)
+		if err != nil {
+			_ = ctx.AbortWithError(http.StatusBadRequest, err)
+			return
+		}
+
+		// TODO: make authorization
+		token, err := extractors.GetAuthorizationToken(ctx)
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+			return
+		}
+
+		conn, err := r.api.NewPeerConnection()
+		if err != nil {
+			ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+
+		ctx.Set(ctxOffer, offer)
+		ctx.Set(ctxToken, token)
+		ctx.Set(ctxConn, conn)
+
+		ctx.Next()
 	}
+}
 
-	// TODO: extract from heades
-	streamToken := "someToken"
+func (*WhipWhepRouter) handleWhip(ctx *gin.Context) {
+	offer := ctx.GetString(ctxOffer)
+	token := ctx.GetString(ctxToken)
+	conn := ctx.MustGet(ctxConn).(*webrtc.PeerConnection) // nolint: revive
 
-	conn, err := r.api.NewPeerConnection()
+	sdpAnswer, err := whipwhep.HandleWhipConn(conn, token, offer)
 	if err != nil {
-		panic(err)
-	}
-
-	sdpAnswer, err := whipwhep.HandleWhipConn(conn, streamToken, string(offer))
-	if err != nil {
-		panic(err)
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+			"desc":  "Failed to handle WHIP connection!",
+		})
+		return
 	}
 
 	ctx.Header("Location", "/whip")
 	ctx.String(http.StatusCreated, "%s", sdpAnswer)
 }
 
-func (r *WhipWhepRouter) handleWhep(ctx *gin.Context) {
-	offer, err := io.ReadAll(ctx.Request.Body)
-	if err != nil {
-		panic(err)
-	}
+func (*WhipWhepRouter) handleWhep(ctx *gin.Context) {
+	offer := ctx.GetString(ctxOffer)
+	token := ctx.GetString(ctxToken)
+	conn := ctx.MustGet(ctxConn).(*webrtc.PeerConnection) // nolint: revive
 
-	// TODO
-	streamToken := "someToken"
-
-	conn, err := r.api.NewPeerConnection()
+	sdpAnswer, err := whipwhep.HandleWhepConn(conn, token, offer)
 	if err != nil {
-		panic(err)
-	}
-
-	sdpAnswer, err := whipwhep.HandleWhepConn(conn, streamToken, string(offer))
-	if err != nil {
-		panic(err)
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	ctx.Header("Location", "/whep")
