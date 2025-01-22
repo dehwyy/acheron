@@ -7,4 +7,4 @@
 *.css linguist-vendored
 *.scss linguist-vendored
 *.html linguist-vendored
-web/app/components/ui/* linguist-vendored
+web/app/components/** linguist-vendored
