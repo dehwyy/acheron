@@ -2,9 +2,10 @@
 nexus = 4444
 srt_server = 2233
 stream_broadcaster = 8081
+stream_whip = 8082
 
 [m3u8]
+clear_after_unused_segments = 5
 segment_duration_millis = 1000
 segments_per_stream = 13
-clear_after_unused_segments = 5
 streams_directory = "content/streams"

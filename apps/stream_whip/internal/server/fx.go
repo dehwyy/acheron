@@ -34,7 +34,7 @@ func NewFx(params ServerParams) *Server {
 	params.LC.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			go func() {
-				params.Log.Fatal().Msgf("%v", r.Start(ctx, 8080)) // TODO: Port -> Config
+				params.Log.Fatal().Msgf("%v", r.Start(ctx, params.Config.Addr().Ports.StreamWhip))
 			}()
 
 			return nil
