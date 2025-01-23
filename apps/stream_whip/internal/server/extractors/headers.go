@@ -2,7 +2,6 @@ package extractors
 
 import (
 	"errors"
-	"fmt"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -28,7 +27,6 @@ func GetAuthorizationToken(ctx *gin.Context) (string, error) {
 	if len(tokens) != 2 || tokens[0] != "Bearer" {
 		return "", ErrInvalidAuthorizatioToken
 	}
-
 
 	return tokens[1], nil
 }

@@ -6,7 +6,7 @@ import (
 )
 
 func NewOnTrackHandler(mediaStream *mediastream.MediaStream) func(*webrtc.TrackRemote, *webrtc.RTPReceiver) {
-	return func(track *webrtc.TrackRemote, recv *webrtc.RTPReceiver) {
+	return func(track *webrtc.TrackRemote, _ *webrtc.RTPReceiver) {
 		for {
 			pkt, _, err := track.ReadRTP()
 			if err != nil {

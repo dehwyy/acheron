@@ -15,6 +15,6 @@ func (s *Server) Start(_ context.Context, port uint) error {
 	return s.Run(fmt.Sprintf(":%d", port))
 }
 
-func (s *Server) Stop(_ context.Context) error {
+func (*Server) Stop(_ context.Context) error {
 	return nil
 }
