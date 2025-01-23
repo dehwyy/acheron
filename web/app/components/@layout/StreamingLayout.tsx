@@ -1,26 +1,20 @@
-import { VideoPlayer } from "@videojs-player/react"
-import { useMemo } from "react"
-import "video.js/dist/video-js.css"
+import { AppShell, Box, Container } from "$layout/essential"
 
 interface Props {
-    streamName: string
+    children: React.ReactNode
 }
 
-export function StreamingLayout({ streamName }: Props) {
-    const streamPath = useMemo(() => {
-        return `http://localhost:8081/api/v1/${streamName}/playlist.m3u8`
-    }, [streamName])
-
+export function StreamingLayout({ children }: Props) {
     return (
-        <VideoPlayer
-
-            id="video-player"
-            src={streamPath}
-            volume={0.6}
-            preload="auto"
-            liveui
-            autoplay
-            controls
-        />
+        <AppShell withHeader>
+            <Container grow>
+                {children}
+            </Container>
+            <Container w="200px" flexHorizontal>
+                <Box variant="gradient">
+                    Some sheesh
+                </Box>
+            </Container>
+        </AppShell>
     )
 }
