@@ -1,30 +1,30 @@
 import clsx from "clsx"
 
 interface AsideProps {
-    width?: string
+    w?: string
     h?: string
-    horizontal?: boolean
+    flexHorizontal?: boolean
     grow?: boolean
     children?: React.ReactNode[] | React.ReactNode
     className?: string
 }
 
-export function Container(props: AsideProps) {
+export function Container({ w, h, flexHorizontal, grow, children, className }: AsideProps) {
     return (
         <section
             style={{
-                height: props.h,
-                minHeight: props.h,
-                width: props.width ?? "100%"
+                height: h,
+                minHeight: h,
+                width: w ?? "100%"
             }}
             className={clsx(
                 "flex gap-y-3 gap-x-1 overflow-y-auto",
-                props.className,
-                props.grow && "flex-1",
-                props.horizontal ? "flex-row" : "flex-col"
+                className,
+                grow && "flex-1",
+                flexHorizontal ? "flex-row" : "flex-col"
             )}
         >
-            {props.children}
+            {children}
         </section>
     )
 }

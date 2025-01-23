@@ -27,19 +27,19 @@ export function Box({ children, className, ...props }: BoxProps) {
     )
 }
 
-function Wrapper(props: WrapperProps) {
-    return props.scrollable
+function Wrapper({ children, w, h, scrollable, grow, alignSelf }: WrapperProps) {
+    return scrollable
         ? (
-                <ScrollShadow style={{ height: props.h ?? "100%" }} className={clsx("pr-1", props.grow && "flex-1")}>
-                    {props.children}
+                <ScrollShadow style={{ height: h ?? "100%" }} className={clsx("pr-1", grow && "flex-1")}>
+                    {children}
                 </ScrollShadow>
             )
         : (
                 <div
-                    style={{ height: props.h, minHeight: props.h, maxHeight: props.h, width: props.w, alignSelf: props.alignSelf }}
-                    className={clsx(props.grow && "flex-1")}
+                    style={{ height: h, minHeight: h, maxHeight: h, width: w, alignSelf }}
+                    className={clsx(grow && "flex-1")}
                 >
-                    {props.children}
+                    {children}
                 </div>
             )
 }

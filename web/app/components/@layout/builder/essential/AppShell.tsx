@@ -5,7 +5,7 @@ interface AppShellProps {
     withHeader?: boolean
 }
 
-export default function AppShell({ children, withHeader }: AppShellProps) {
+export function AppShell({ children, withHeader }: AppShellProps) {
     return (
         <div className="flex justify-center min-h-screen">
             <div className="flex flex-col w-full relative">

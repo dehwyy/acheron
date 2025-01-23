@@ -29,14 +29,14 @@ interface CardPresetedProps {
     variant?: Variant
 }
 
-export function CardPreseted(props: CardPresetedProps) {
+export function CardPreseted({ children, className, variant }: CardPresetedProps) {
     const v = useMemo(() => {
-        return variants[props.variant || defaultVariant]
-    }, [props.variant])
+        return variants[variant || defaultVariant]
+    }, [variant])
 
     return (
-        <Card isBlurred={v.isBlured} shadow={v.shadow} className={clsx(props.className, v.className)}>
-            {props.children}
+        <Card isBlurred={v.isBlured} shadow={v.shadow} className={clsx(className, v.className)}>
+            {children}
         </Card>
     )
 }
