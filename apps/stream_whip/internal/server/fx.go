@@ -7,6 +7,7 @@ import (
 	"github.com/dehwyy/mugen/apps/stream_whip/internal/server/routers"
 	"github.com/dehwyy/mugen/libraries/go/config"
 	"github.com/dehwyy/mugen/libraries/go/logg"
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/fx"
 )
@@ -25,10 +26,20 @@ func NewFx(params ServerParams) *Server {
 	r := &Server{
 		gin.New(),
 	}
+	r.Use(
+		cors.New(
+			cors.Config{
+				AllowAllOrigins:  true,
+				AllowMethods:     []string{"*"},
+				AllowHeaders:     []string{"*"},
+				ExposeHeaders:    []string{"*"},
+				AllowCredentials: true,
+			},
+		),
+	)
 	r.StaticFile("/", "./apps/stream_whip/cmd/index.html")
 
 	v1 := r.Group("/api/v1")
-
 	v1.Use(middleware.NewLoggerMiddleware(params.Log))
 
 	params.WhipWhepRouter.RegisterRoutes(v1)
