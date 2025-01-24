@@ -18,3 +18,15 @@ func newMediaEngine() (*webrtc.MediaEngine, error) {
 
 	return mediaEngine, nil
 }
+
+func newSettingEngine() (*webrtc.SettingEngine, error) {
+	settingEngine := &webrtc.SettingEngine{}
+
+	// mux, err := ice.NewMultiUDPMuxFromPort(8998)
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// settingEngine.SetICEUDPMux(mux)
+
+	return settingEngine, nil
+}

@@ -59,8 +59,8 @@ func New(token string, kind MediaStreamKind) (*MediaStream, error) {
 	return stream, nil
 }
 
-func Get(token string) (*MediaStream, error) {
-	if stream, ok := CreatedStreams[token]; ok {
+func Get(streamName string) (*MediaStream, error) {
+	if stream, ok := CreatedStreams[streamName]; ok {
 		return stream, nil
 	}
 

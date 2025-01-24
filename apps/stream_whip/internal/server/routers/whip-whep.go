@@ -18,6 +18,8 @@ const (
 	ctxOffer = "offer"
 	ctxToken = "token"
 	ctxConn  = "conn"
+
+	headerXStreamName = "X-Stream-Name"
 )
 
 type WhipWhepRouter struct {
@@ -68,7 +70,10 @@ func (*WhipWhepRouter) handleWhip(ctx *gin.Context) {
 	token := ctx.GetString(ctxToken)
 	conn := ctx.MustGet(ctxConn).(*webrtc.PeerConnection) // nolint: revive
 
-	sdpAnswer, err := whipwhep.HandleWhipConn(conn, token, offer)
+	// TODO: get `StreamName` from auth
+	streamName := token
+
+	sdpAnswer, err := whipwhep.HandleWhipConn(conn, streamName, offer)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
@@ -83,10 +88,11 @@ func (*WhipWhepRouter) handleWhip(ctx *gin.Context) {
 
 func (*WhipWhepRouter) handleWhep(ctx *gin.Context) {
 	offer := ctx.GetString(ctxOffer)
-	token := ctx.GetString(ctxToken)
+	// token := ctx.GetString(ctxToken) // TODO: somehow validate user session
 	conn := ctx.MustGet(ctxConn).(*webrtc.PeerConnection) // nolint: revive
 
-	sdpAnswer, err := whipwhep.HandleWhepConn(conn, token, offer)
+	streamName := ctx.GetHeader(headerXStreamName)
+	sdpAnswer, err := whipwhep.HandleWhepConn(conn, streamName, offer)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return

@@ -13,6 +13,7 @@ import (
 //   - LocalSDPOffer: string
 func exchangeSDPOffers(conn *webrtc.PeerConnection, offer string) (string, error) {
 	conn.OnICEConnectionStateChange(eventhandlers.NewOnICEConnectionStateChangeHandler(conn))
+	conn.OnICECandidate(eventhandlers.NewOnICECandidateHandler())
 
 	if err := conn.SetRemoteDescription(webrtc.SessionDescription{
 		Type: webrtc.SDPTypeOffer,
@@ -39,7 +40,7 @@ func exchangeSDPOffers(conn *webrtc.PeerConnection, offer string) (string, error
 
 // @Returns:
 //   - LocalSDPOffer: string
-func HandleWhipConn(conn *webrtc.PeerConnection, streamToken, offer string) (string, error) {
+func HandleWhipConn(conn *webrtc.PeerConnection, streamName, offer string) (string, error) {
 	var err error
 
 	if _, err = conn.AddTransceiverFromKind(webrtc.RTPCodecTypeVideo); err != nil {
@@ -50,10 +51,10 @@ func HandleWhipConn(conn *webrtc.PeerConnection, streamToken, offer string) (str
 		return "", err
 	}
 
-	mediaStream, err := mediastream.New(streamToken, mediastream.AudioVideo)
+	mediaStream, err := mediastream.New(streamName, mediastream.AudioVideo)
 	if err != nil {
 		if errors.Is(err, mediastream.ErrAlreadyExists) {
-			return "", fmt.Errorf("%w: token = %s", err, streamToken)
+			return "", fmt.Errorf("%w: token = %s", err, streamName)
 		}
 		return "", fmt.Errorf("failed to create media stream: %w", err)
 	}
@@ -65,11 +66,11 @@ func HandleWhipConn(conn *webrtc.PeerConnection, streamToken, offer string) (str
 
 // @Returns:
 //   - LocalSDPOffer: string
-func HandleWhepConn(conn *webrtc.PeerConnection, streamToken, offer string) (string, error) {
-	mediaStream, err := mediastream.Get(streamToken)
+func HandleWhepConn(conn *webrtc.PeerConnection, streamName, offer string) (string, error) {
+	mediaStream, err := mediastream.Get(streamName)
 	if err != nil {
 		if errors.Is(err, mediastream.ErrNotExists) {
-			return "", fmt.Errorf("%w: token = %s", err, streamToken)
+			return "", fmt.Errorf("%w: stream = %s", err, streamName)
 		}
 		return "", fmt.Errorf("failed to get media stream: %w", err)
 	}
