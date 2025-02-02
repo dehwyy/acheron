@@ -4,10 +4,8 @@ import { StreamingLayout } from "@/components/@layout/StreamingLayout"
 
 export default function Page() {
     return (
-        <>
-            <StreamingLayout>
-                <RTCVideoPlayer />
-            </StreamingLayout>
-        </>
+        <StreamingLayout>
+            <RTCVideoPlayer />
+        </StreamingLayout>
     )
 }

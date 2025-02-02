@@ -8,6 +8,7 @@ export const fontSans = Open_Sans({
 
 export const fontMono = FontMono({
     subsets: ["latin"],
+    weight: ["400", "500", "600", "700"],
     variable: "--font-mono"
 })
 

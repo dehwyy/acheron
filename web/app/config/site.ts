@@ -1,6 +1,6 @@
 export type SiteConfig = typeof siteConfig
 
 export const siteConfig = {
-    name: "Mugen",
-    description: "Mugen no mugen"
+    name: "Acheron",
+    description: "Acheron is a free and open source streaming platform."
 }

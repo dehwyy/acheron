@@ -3,7 +3,7 @@
 import { API } from "@/lib/api"
 import { useParams } from "next/navigation"
 import { useEffect } from "react"
-import "video.js/dist/video-js.css"
+// import "video.js/dist/video-js.css"
 
 const authToken = "dehwyy"
 
@@ -20,7 +20,6 @@ export function RTCVideoPlayer() {
             const video = document.getElementById("video-player") as HTMLVideoElement
             video.srcObject = event.streams[0]
         }
-
         conn.createOffer().then((offer) => {
             conn.setLocalDescription(offer)
 
@@ -43,7 +42,7 @@ export function RTCVideoPlayer() {
 
     return (
         <video
-            className="w-full h-full"
+            className="h-full w-full"
             id="video-player"
             autoPlay
             controls

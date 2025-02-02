@@ -1,6 +1,6 @@
-import type { ButtonProps, TooltipProps } from "@nextui-org/react"
+import type { ButtonProps, TooltipProps } from "@heroui/react"
 import { useHover } from "@custom-react-hooks/all"
-import { Button, Tooltip } from "@nextui-org/react"
+import { Button, Tooltip } from "@heroui/react"
 import clsx from "clsx"
 import { useState } from "react"
 

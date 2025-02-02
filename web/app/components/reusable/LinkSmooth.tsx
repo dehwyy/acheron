@@ -1,23 +1,22 @@
-import type { LinkProps } from "@nextui-org/link"
-import { Link } from "@nextui-org/link"
+import type { LinkProps } from "@heroui/link"
+import { Link } from "@heroui/link"
 
 interface LinkSmoothProps extends LinkProps {
     anchorId: string
     children: React.ReactNode
 }
 
-export function LinkSmooth(props: LinkSmoothProps) {
+export function LinkSmooth({ anchorId, children, onPress, ...props }: LinkSmoothProps) {
     return (
         <Link
-            onClick={(e) => {
-                e.preventDefault()
-                document.getElementById(props.anchorId)?.scrollIntoView({ behavior: "smooth" })
-                props.onClick?.(e)
+            onPress={(e) => {
+                document.getElementById(anchorId)?.scrollIntoView({ behavior: "smooth" })
+                onPress?.(e)
             }}
-            href={`#${props.anchorId}`}
+            href={`#${anchorId}`}
             {...props}
         >
-            {props.children}
+            {children}
         </Link>
     )
 }

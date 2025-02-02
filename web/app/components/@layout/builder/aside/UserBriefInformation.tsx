@@ -1,4 +1,4 @@
-import { User } from "@nextui-org/react"
+import { User } from "@heroui/react"
 import clsx from "clsx"
 
 interface UserBriefInformationProps {

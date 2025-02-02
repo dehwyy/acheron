@@ -1,4 +1,4 @@
-import { Card } from "@nextui-org/react"
+import { Card } from "@heroui/react"
 import clsx from "clsx"
 import { useMemo } from "react"
 

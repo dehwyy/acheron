@@ -12,6 +12,7 @@ export function HLSVideoPlayer() {
     }, [streamName])
     return (
         <VideoPlayer
+            poster="/4me.jpg"
             id="video-player"
             src={streamPath}
             volume={0.6}

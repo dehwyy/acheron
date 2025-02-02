@@ -1,6 +1,6 @@
 import type { Variant } from "@/components/reusable/CardPreseted"
 import { CardPreseted } from "@/components/reusable/CardPreseted"
-import { CardBody, ScrollShadow } from "@nextui-org/react"
+import { CardBody, ScrollShadow } from "@heroui/react"
 import clsx from "clsx"
 
 interface WrapperProps {
