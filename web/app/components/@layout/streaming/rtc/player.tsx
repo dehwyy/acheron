@@ -1,14 +1,16 @@
 "use client"
 
 import { API } from "@/lib/api"
-import { useParams } from "next/navigation"
 import { useEffect } from "react"
-// import "video.js/dist/video-js.css"
 
 const authToken = "dehwyy"
 
-export function RTCVideoPlayer() {
-    const { streamName } = useParams<{ streamName: string }>()
+interface Props {
+    streamName: string
+}
+
+export function RTCVideoPlayer({ streamName }: Props) {
+    // const { lobbyName } = useParams<{ lobbyName: string }>()
 
     useEffect(() => {
         const conn = new RTCPeerConnection()

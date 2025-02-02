@@ -21,7 +21,7 @@ export function Container({ w, h, flexHorizontal, grow, children, className }: A
                 "flex gap-y-3 gap-x-1 overflow-y-auto",
                 className,
                 grow && "flex-1",
-                flexHorizontal ? "flex-row" : "flex-col"
+                flexHorizontal ? "flex-col" : "flex-row"
             )}
         >
             {children}

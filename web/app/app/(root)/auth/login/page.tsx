@@ -9,7 +9,7 @@ export default function Page() {
     const [isVisiblePassword, setIsVisiblePassword] = useState(false)
     return (
         <Box variant="gradient" w="350px" alignSelf="center" className="pt-7 pb-5 px-7">
-            <h1 className="text-center text-2xl font-semibold">Acheron</h1>
+            <h1 className="text-center text-2xl font-semibol">Acheron</h1>
             <Form className="flex flex-col gap-y-5 py-5">
                 <Input variant="underlined" label="Username" name="username" autoComplete="off" />
                 <Input

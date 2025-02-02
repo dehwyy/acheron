@@ -20,7 +20,7 @@ interface BoxProps extends WrapperProps {
 export function Box({ children, className, ...props }: BoxProps) {
     return (
         <Wrapper {...props}>
-            <CardPreseted variant={props.variant} className="min-h-full">
+            <CardPreseted variant={props.variant} className="min-h-full overflow-visible">
                 <CardBody className={clsx("flex flex-col gap-y-2 overflow-y-auto", className)}>{children}</CardBody>
             </CardPreseted>
         </Wrapper>
