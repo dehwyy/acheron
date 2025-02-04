@@ -5,10 +5,10 @@ $secondaryColor: black;
 .button {
   background-color: $secondaryColor;
   font-size: inherit;
-  padding: 0.5rem 0.25rem;
+  padding: 0.25rem 0.25rem;
   outline: none;
   user-select: none;
-  width: 100%;
+  min-width: 200px;
   border: 2px solid $primaryColor;
   position: relative;
   text-align: center;

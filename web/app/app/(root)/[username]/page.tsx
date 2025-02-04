@@ -25,13 +25,13 @@ const dropdownActions = [
 
 export default function Page({ params }: PageProps<Params>) {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false)
-    const editUrl = useMemo(() => `/edit/${params.username}`, [params.username])
+    const editUrl = useMemo(() => `/${params.username}/edit`, [params.username])
 
     return (
-        <div className="max-w-full" style={{ width: 700 }}>
+        <Box className="max-w-full" w="700px">
             <section className="relative w-full">
                 <Image isZoomed src={imageSrc} alt="user background" height={250} width={700} className="object-cover object-center" />
-                <div className="absolute -bottom-3 w-full z-10">
+                <div className="absolute -bottom-3 w-full z-20">
                     <Container className="overflow-y-visible gap-x-10">
                         <Box variant="gradient" h={userPanelHeight} w="300px" className="overflow-y-visible flex-row items-center">
                             <div className="relative w-[150px] h-[40px]">
@@ -66,9 +66,14 @@ export default function Page({ params }: PageProps<Params>) {
                     </Box> */}
                 </div>
             </section>
-            <section className="h-[1000px]">
-                <RTCVideoPlayer streamName={params.username} />
-            </section>
-        </div>
+            <Container h="1000px" flexHorizontal className="py-7 gap-y-3">
+                <Box variant="gradientSuccess">
+                    <p className="text-center ">Stream online!</p>
+                </Box>
+                <Box className="overflow-hidden p-0 rounded-sm">
+                    <RTCVideoPlayer streamName={params.username} />
+                </Box>
+            </Container>
+        </Box>
     )
 }

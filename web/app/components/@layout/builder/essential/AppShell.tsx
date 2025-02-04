@@ -13,7 +13,7 @@ export function AppShell({ children, withHeader }: AppShellProps) {
                 <div className="flex flex-col w-full relative">
                     {withHeader && <AppHeader />}
                     <main className="flex-1 overflow-hidden">
-                        <div className="w-full flex gap-x-3 px-5 py-3 transition-all h-screen max-h-full">{children}</div>
+                        <div className="w-full flex gap-x-3 px-5 my-3 transition-all h-screen max-h-full">{children}</div>
                     </main>
                 </div>
             </div>

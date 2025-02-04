@@ -2,7 +2,7 @@ import { Card } from "@heroui/react"
 import clsx from "clsx"
 import { useMemo } from "react"
 
-export type Variant = "gradient" | "gradientPurple" | "unstyled"
+export type Variant = "gradient" | "gradientPurple" | "gradientSuccess" | "unstyled"
 type Shadow = "sm" | "md" | "lg" | "none"
 
 const defaultVariant: Variant = "unstyled"
@@ -18,6 +18,7 @@ function newVariant(className: string, shadow?: Shadow, isBlured?: boolean) {
 const variants = {
     gradient: newVariant("bg-background/60 dark:bg-gradient-to-br from-default-100/30 to-default-100/10", "sm", true),
     gradientPurple: newVariant("bg-purple-600/60 dark:bg-gradient-to-br from-default-100/30 to-purple-400/30", "sm", true),
+    gradientSuccess: newVariant("bg-green-600/60 dark:bg-gradient-to-br from-default-100/30 to-green-600/20", "sm", true),
     unstyled: newVariant("bg-transparent shadow-none")
 } as {
     [key in Variant]: ReturnType<typeof newVariant>
