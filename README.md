@@ -1,6 +1,6 @@
 # Mugen
 
-## Streaminga
+## Streaming
 There're 2 types of streaming:
 1. ***SRT*** - at least 2 seconds latency
 2. ***WebRTC(Whip)*** - very low-latency as connection established P2P
@@ -29,3 +29,11 @@ There're 2 types of streaming:
 ### StreamHost service
 - Responisible for handling data passed by SRT connection from OBS.
 - Recommended `SegmentDuration`=1000 (ms) and `SegmentsPerStream`>=10 (via `config/config.toml`)
+
+## App screenshots
+
+### Auth page
+<img src="docs/screenshots/app_login.jpg">
+
+### User page (not dedicated for watching streams)
+<img src="docs/screenshots/app_stream.jpg">
