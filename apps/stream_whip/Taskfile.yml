@@ -1,4 +1,4 @@
 version: "3"
 
 tasks:
-  swagger: swag init -g cmd/main.go
+  swagger: swag init -g cmd/main.go -o docs -q --pdl 1 --pd

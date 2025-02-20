@@ -8,6 +8,25 @@ import (
 	"go.uber.org/fx"
 )
 
+// @title WhipWhep API
+// @version 1.0
+// @description **Whip** and **Whep** protocol implementation. `OBS => Server` - *Whip*. `Server <=> Client` (e.g from browser) - *Whep*. It's a **bridge** to make `WebRTC` connection.
+
+// @tag.name WhipWhep
+// @tag.description Essential router
+
+// @contact.name dehwyy
+// @contact.url	https://t.me/dehwyy
+// @contact.email	dehwyyy@gmail.icom
+
+// @externalDocs.description IETF WHIP
+// @externalDocs.url https://datatracker.ietf.org/doc/html/draft-ietf-wish-whip-16
+// // @externalDocs.description IETF WHEP
+// // @externalDocs.url https://datatracker.ietf.org/doc/html/draft-murillo-whep-03
+
+// @host localhost:8080
+// @BasePath /api/v1
+
 func main() {
 	fx.New(
 		fx.Provide(
