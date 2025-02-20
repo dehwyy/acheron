@@ -1,7 +1,7 @@
 package eventhandlers
 
 import (
-	"github.com/dehwyy/mugen/apps/stream_whip/internal/rtc/mediastream"
+	"github.com/dehwyy/acheron/apps/stream_whip/internal/rtc/mediastream"
 	"github.com/pion/webrtc/v4"
 )
 

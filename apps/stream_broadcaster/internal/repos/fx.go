@@ -1,8 +1,8 @@
 package repos
 
 import (
-	"github.com/dehwyy/mugen/libraries/go/config"
-	"github.com/dehwyy/mugen/libraries/go/logg"
+	"github.com/dehwyy/acheron/libraries/go/config"
+	"github.com/dehwyy/acheron/libraries/go/logg"
 	"go.uber.org/fx"
 )
 

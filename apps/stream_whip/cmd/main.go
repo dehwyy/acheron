@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/dehwyy/mugen/apps/stream_whip/internal/server"
-	"github.com/dehwyy/mugen/apps/stream_whip/internal/server/routers"
-	"github.com/dehwyy/mugen/libraries/go/config"
-	"github.com/dehwyy/mugen/libraries/go/logg"
+	"github.com/dehwyy/acheron/apps/stream_whip/internal/server"
+	"github.com/dehwyy/acheron/apps/stream_whip/internal/server/routers"
+	"github.com/dehwyy/acheron/libraries/go/config"
+	"github.com/dehwyy/acheron/libraries/go/logg"
 	"go.uber.org/fx"
 )
 

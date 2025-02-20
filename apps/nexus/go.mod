@@ -1,16 +1,16 @@
-module github.com/dehwyy/mugen/apps/nexus
+module github.com/dehwyy/acheron/apps/nexus
 
 go 1.23.2
 
 replace (
-	github.com/dehwyy/mugen/libraries/go/config => ../../libraries/go/config
-	github.com/dehwyy/mugen/libraries/go/logg => ../../libraries/go/logg
+	github.com/dehwyy/acheron/libraries/go/config => ../../libraries/go/config
+	github.com/dehwyy/acheron/libraries/go/logg => ../../libraries/go/logg
 )
 
 require (
 	github.com/99designs/gqlgen v0.17.63
-	github.com/dehwyy/mugen/libraries/go/config v0.0.0-00010101000000-000000000000
-	github.com/dehwyy/mugen/libraries/go/logg v0.0.0-00010101000000-000000000000
+	github.com/dehwyy/acheron/libraries/go/config v0.0.0-00010101000000-000000000000
+	github.com/dehwyy/acheron/libraries/go/logg v0.0.0-00010101000000-000000000000
 	github.com/gin-contrib/cors v1.7.3
 	github.com/gin-gonic/gin v1.10.0
 	github.com/vektah/gqlparser/v2 v2.5.21

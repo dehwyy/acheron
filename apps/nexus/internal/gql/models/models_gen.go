@@ -3,7 +3,7 @@
 package gqlmodels
 
 import (
-	"github.com/dehwyy/mugen/apps/nexus/internal/gql/scalars"
+	"github.com/dehwyy/acheron/apps/nexus/internal/gql/scalars"
 )
 
 type Query struct {

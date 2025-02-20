@@ -3,8 +3,8 @@ package mediastream
 import (
 	"errors"
 
-	"github.com/dehwyy/mugen/apps/stream_whip/internal/rtc/mediastream/rtp"
-	"github.com/dehwyy/mugen/apps/stream_whip/internal/rtc/mediastream/track"
+	"github.com/dehwyy/acheron/apps/stream_whip/internal/rtc/mediastream/rtp"
+	"github.com/dehwyy/acheron/apps/stream_whip/internal/rtc/mediastream/track"
 	"github.com/pion/webrtc/v4"
 )
 

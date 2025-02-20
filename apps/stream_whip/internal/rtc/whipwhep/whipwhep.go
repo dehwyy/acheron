@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	eventhandlers "github.com/dehwyy/mugen/apps/stream_whip/internal/rtc/event-handlers"
-	"github.com/dehwyy/mugen/apps/stream_whip/internal/rtc/mediastream"
+	eventhandlers "github.com/dehwyy/acheron/apps/stream_whip/internal/rtc/event-handlers"
+	"github.com/dehwyy/acheron/apps/stream_whip/internal/rtc/mediastream"
 	"github.com/pion/webrtc/v4"
 )
 

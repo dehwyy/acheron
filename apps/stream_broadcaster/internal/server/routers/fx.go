@@ -1,8 +1,8 @@
 package routers
 
 import (
-	"github.com/dehwyy/mugen/apps/stream_broadcaster/internal/repos"
-	"github.com/dehwyy/mugen/libraries/go/logg"
+	"github.com/dehwyy/acheron/apps/stream_broadcaster/internal/repos"
+	"github.com/dehwyy/acheron/libraries/go/logg"
 	"go.uber.org/fx"
 )
 

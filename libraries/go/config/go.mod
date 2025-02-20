@@ -1,4 +1,4 @@
-module github.com/dehwyy/mugen/libraries/go/config
+module github.com/dehwyy/acheron/libraries/go/config
 
 go 1.23.2
 

@@ -3,16 +3,16 @@ package server
 import (
 	"context"
 
-	"github.com/dehwyy/mugen/apps/stream_whip/internal/server/middleware"
-	"github.com/dehwyy/mugen/apps/stream_whip/internal/server/routers"
-	"github.com/dehwyy/mugen/libraries/go/config"
-	"github.com/dehwyy/mugen/libraries/go/logg"
+	"github.com/dehwyy/acheron/apps/stream_whip/internal/server/middleware"
+	"github.com/dehwyy/acheron/apps/stream_whip/internal/server/routers"
+	"github.com/dehwyy/acheron/libraries/go/config"
+	"github.com/dehwyy/acheron/libraries/go/logg"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/fx"
 
 	// Swagger
-	_ "github.com/dehwyy/mugen/apps/stream_whip/docs" // import docs
+	_ "github.com/dehwyy/acheron/apps/stream_whip/docs" // import docs
 	swaggerFiles "github.com/swaggo/files"
 	swagger "github.com/swaggo/gin-swagger"
 )

@@ -1,7 +1,7 @@
 package resolvers
 
 import (
-	"github.com/dehwyy/mugen/libraries/go/logg"
+	"github.com/dehwyy/acheron/libraries/go/logg"
 	"go.uber.org/fx"
 )
 

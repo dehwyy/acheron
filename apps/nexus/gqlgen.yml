@@ -107,17 +107,17 @@ call_argument_directives_with_null: true
 # gqlgen will search for any type names in the schema in these go packages
 # if they match it will use them, otherwise it will generate them.
 autobind:
-#  - "github.com/dehwyy/mugen/apps/nexus/graph/model"
+#  - "github.com/dehwyy/acheron/apps/nexus/graph/model"
 
 # The first line in each type will be used as defaults for resolver arguments and
 # modelgen, the others will be allowed when binding to fields. Configure them to
 # your liking
 models:
   Byte:
-    model: github.com/dehwyy/mugen/apps/nexus/internal/gql/scalars.Byte
+    model: github.com/dehwyy/acheron/apps/nexus/internal/gql/scalars.Byte
 
   Bytes:
-    model: github.com/dehwyy/mugen/apps/nexus/internal/gql/scalars.Bytes
+    model: github.com/dehwyy/acheron/apps/nexus/internal/gql/scalars.Bytes
 
   ID:
     model:

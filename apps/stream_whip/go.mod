@@ -1,10 +1,10 @@
-module github.com/dehwyy/mugen/apps/stream_whip
+module github.com/dehwyy/acheron/apps/stream_whip
 
 go 1.23.2
 
 require (
-	github.com/dehwyy/mugen/libraries/go/config v0.0.0-00010101000000-000000000000
-	github.com/dehwyy/mugen/libraries/go/logg v0.0.0-00010101000000-000000000000
+	github.com/dehwyy/acheron/libraries/go/config v0.0.0-00010101000000-000000000000
+	github.com/dehwyy/acheron/libraries/go/logg v0.0.0-00010101000000-000000000000
 	github.com/gin-contrib/cors v1.7.3
 	github.com/gin-gonic/gin v1.10.0
 	github.com/pion/interceptor v0.1.37
@@ -16,8 +16,8 @@ require (
 )
 
 replace (
-	github.com/dehwyy/mugen/libraries/go/config => ../../libraries/go/config
-	github.com/dehwyy/mugen/libraries/go/logg => ../../libraries/go/logg
+	github.com/dehwyy/acheron/libraries/go/config => ../../libraries/go/config
+	github.com/dehwyy/acheron/libraries/go/logg => ../../libraries/go/logg
 )
 
 require (

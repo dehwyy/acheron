@@ -1,7 +1,7 @@
 package rtc
 
 import (
-	"github.com/dehwyy/mugen/apps/stream_whip/internal/rtc/codecs"
+	"github.com/dehwyy/acheron/apps/stream_whip/internal/rtc/codecs"
 	"github.com/pion/webrtc/v4"
 )
 

@@ -1,4 +1,4 @@
-module github.com/dehwyy/mugen/libraries/go/logg
+module github.com/dehwyy/acheron/libraries/go/logg
 
 go 1.23.2
 

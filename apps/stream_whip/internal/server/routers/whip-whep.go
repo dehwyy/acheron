@@ -3,11 +3,11 @@ package routers
 import (
 	"net/http"
 
-	"github.com/dehwyy/mugen/apps/stream_whip/internal/rtc"
-	"github.com/dehwyy/mugen/apps/stream_whip/internal/rtc/whipwhep"
-	"github.com/dehwyy/mugen/apps/stream_whip/internal/server/errors"
-	"github.com/dehwyy/mugen/apps/stream_whip/internal/server/extractors"
-	"github.com/dehwyy/mugen/libraries/go/logg"
+	"github.com/dehwyy/acheron/apps/stream_whip/internal/rtc"
+	"github.com/dehwyy/acheron/apps/stream_whip/internal/rtc/whipwhep"
+	"github.com/dehwyy/acheron/apps/stream_whip/internal/server/errors"
+	"github.com/dehwyy/acheron/apps/stream_whip/internal/server/extractors"
+	"github.com/dehwyy/acheron/libraries/go/logg"
 	"github.com/gin-gonic/gin"
 	"github.com/pion/webrtc/v4"
 )

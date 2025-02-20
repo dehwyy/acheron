@@ -3,8 +3,8 @@ package rtc
 import (
 	"errors"
 
-	"github.com/dehwyy/mugen/apps/stream_whip/internal/rtc/configuration"
-	"github.com/dehwyy/mugen/apps/stream_whip/internal/rtc/interceptors"
+	"github.com/dehwyy/acheron/apps/stream_whip/internal/rtc/configuration"
+	"github.com/dehwyy/acheron/apps/stream_whip/internal/rtc/interceptors"
 	"github.com/pion/webrtc/v4"
 )
 

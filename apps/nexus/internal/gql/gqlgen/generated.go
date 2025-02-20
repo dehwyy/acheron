@@ -13,8 +13,8 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
-	gqlmodels "github.com/dehwyy/mugen/apps/nexus/internal/gql/models"
-	"github.com/dehwyy/mugen/apps/nexus/internal/gql/scalars"
+	gqlmodels "github.com/dehwyy/acheron/apps/nexus/internal/gql/models"
+	"github.com/dehwyy/acheron/apps/nexus/internal/gql/scalars"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )

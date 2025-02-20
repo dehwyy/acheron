@@ -3,8 +3,8 @@ package config
 import (
 	"fmt"
 
-	"github.com/dehwyy/mugen/libraries/go/config/configs"
-	"github.com/dehwyy/mugen/libraries/go/config/parser"
+	"github.com/dehwyy/acheron/libraries/go/config/configs"
+	"github.com/dehwyy/acheron/libraries/go/config/parser"
 )
 
 const (

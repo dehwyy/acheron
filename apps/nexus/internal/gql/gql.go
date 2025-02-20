@@ -5,9 +5,9 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/dehwyy/mugen/apps/nexus/internal/gql/gqlgen"
-	"github.com/dehwyy/mugen/apps/nexus/internal/server"
-	"github.com/dehwyy/mugen/libraries/go/logg"
+	"github.com/dehwyy/acheron/apps/nexus/internal/gql/gqlgen"
+	"github.com/dehwyy/acheron/apps/nexus/internal/server"
+	"github.com/dehwyy/acheron/libraries/go/logg"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/fx"
 )

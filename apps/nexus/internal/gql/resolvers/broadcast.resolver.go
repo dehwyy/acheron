@@ -7,7 +7,7 @@ package resolvers
 import (
 	"context"
 
-	gqlmodels "github.com/dehwyy/mugen/apps/nexus/internal/gql/models"
+	gqlmodels "github.com/dehwyy/acheron/apps/nexus/internal/gql/models"
 )
 
 func (r *queryResolver) GetStream(ctx context.Context, req gqlmodels.StreamRequest) (*gqlmodels.StreamResponse, error) {

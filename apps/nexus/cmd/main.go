@@ -1,12 +1,12 @@
 package main
 
 import (
-	"github.com/dehwyy/mugen/apps/nexus/internal/gql"
-	"github.com/dehwyy/mugen/apps/nexus/internal/gql/gqlgen"
-	"github.com/dehwyy/mugen/apps/nexus/internal/gql/resolvers"
-	"github.com/dehwyy/mugen/apps/nexus/internal/server"
-	"github.com/dehwyy/mugen/libraries/go/config"
-	"github.com/dehwyy/mugen/libraries/go/logg"
+	"github.com/dehwyy/acheron/apps/nexus/internal/gql"
+	"github.com/dehwyy/acheron/apps/nexus/internal/gql/gqlgen"
+	"github.com/dehwyy/acheron/apps/nexus/internal/gql/resolvers"
+	"github.com/dehwyy/acheron/apps/nexus/internal/server"
+	"github.com/dehwyy/acheron/libraries/go/config"
+	"github.com/dehwyy/acheron/libraries/go/logg"
 	"go.uber.org/fx"
 )
 

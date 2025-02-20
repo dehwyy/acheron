@@ -3,7 +3,7 @@ package middleware
 import (
 	"sync/atomic"
 
-	"github.com/dehwyy/mugen/libraries/go/logg"
+	"github.com/dehwyy/acheron/libraries/go/logg"
 	"github.com/gin-gonic/gin"
 )
 
