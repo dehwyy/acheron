@@ -1,0 +1,4 @@
+version: "3"
+
+tasks:
+  swagger: swag init -g cmd/main.go

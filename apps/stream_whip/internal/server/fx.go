@@ -10,6 +10,11 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"go.uber.org/fx"
+
+	// Swagger
+	_ "github.com/dehwyy/mugen/apps/stream_whip/docs" // import docs
+	swaggerFiles "github.com/swaggo/files"
+	swagger "github.com/swaggo/gin-swagger"
 )
 
 type ServerParams struct {
@@ -26,6 +31,9 @@ func NewFx(params ServerParams) *Server {
 	r := &Server{
 		gin.New(),
 	}
+
+	r.GET("/swagger/*any", swagger.WrapHandler(swaggerFiles.Handler))
+
 	r.Use(
 		cors.New(
 			cors.Config{
@@ -37,6 +45,7 @@ func NewFx(params ServerParams) *Server {
 			},
 		),
 	)
+	// TODO: remove
 	r.StaticFile("/", "./apps/stream_whip/cmd/index.html")
 
 	v1 := r.Group("/api/v1")
