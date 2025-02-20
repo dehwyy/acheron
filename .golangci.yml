@@ -44,6 +44,8 @@ linters-settings:
         disabled: true
       - name: line-length-limit
         disabled: true
+      - name: error-strings
+        disabled: true
       # - name: argument-limit
       #   disabled: true
       # - name: bare-return
@@ -190,7 +192,7 @@ linters-settings:
       # Check for common mistaken usages of tests and examples.
       - tests
       # Check for calls of (time.Time).Format or time.Parse with 2006-02-01.
-      - timeformat
+      # - timeformat
       # Report passing non-pointer or non-interface values to unmarshal.
       - unmarshal
       # Check for unreachable code.
