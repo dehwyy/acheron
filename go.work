@@ -1,8 +1,8 @@
 go 1.23.2
 
 use (
-	./apps/stream_broadcaster
-	./apps/stream_whip
+	./apps/stream_x/m3u8_broadcaster
+	./apps/stream_x/p2p_establisher
 	./apps/nexus
 	./libraries/go/logg
 	./libraries/go/config

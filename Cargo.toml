@@ -1,5 +1,5 @@
 [workspace]
-members = ["apps/stream_host", "libraries/rs/config", "libraries/rs/log"]
+members = ["apps/stream_x/m3u8_receiver", "libraries/rs/config", "libraries/rs/log"]
 resolver = "2"
 
 [workspace.dependencies]

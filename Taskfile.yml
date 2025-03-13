@@ -7,3 +7,11 @@ tasks:
     platforms: [windows]
     cmds:
       - ./cli/build/cli.exe {{.CLI_ARGS}}
+
+  precommit:
+    cmds:
+      - cargo check
+      - cargo clippy
+      - cargo fmt
+      - go build apps/stream_x/m3u8_broadcaster/cmd/main.go
+      - go build apps/nexus/cmd/main.go
