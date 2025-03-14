@@ -1,6 +1,6 @@
 package packet
 
-import "github.com/dehwyy/acheron/apps/stream_x/shared/xdp/protocol/packet/xdptypes"
+import "github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/packet/xdptypes"
 
 type Packet struct {
 	version      byte

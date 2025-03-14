@@ -3,6 +3,8 @@ package workerpool
 import (
 	"context"
 	"net"
+
+	"github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/connection"
 )
 
 const (
@@ -10,6 +12,9 @@ const (
 )
 
 func newWorker(ctx context.Context, connectionChannel <-chan net.Conn) {
+
+	connHandler := connection.NewConnectionHandler()
+
 	for {
 		select {
 		case <-ctx.Done():
@@ -18,7 +23,13 @@ func newWorker(ctx context.Context, connectionChannel <-chan net.Conn) {
 			if !ok {
 				return
 			}
-			defer conn.Close()
+
+			defer conn.Close() // ! Remove or not?
+
+			err := connHandler.HandleConnection(conn)
+			if err != nil {
+				// Logger typeshit
+			}
 		}
 	}
 }
