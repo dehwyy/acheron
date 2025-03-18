@@ -1,6 +1,8 @@
 go 1.23.2
 
 use (
+	./apps/transfer_x/server
+	./apps/transfer_x/shared/xdp
 	./apps/stream_x/m3u8_broadcaster
 	./apps/stream_x/p2p_establisher
 	./apps/nexus

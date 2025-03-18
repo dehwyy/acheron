@@ -31,6 +31,10 @@ func New(opts Opts) func(Params) Logger {
 	}
 }
 
+func NewClassic() Logger {
+	return NewFx(Params{})
+}
+
 func NewFx(p Params) Logger {
 	var out io.Writer
 

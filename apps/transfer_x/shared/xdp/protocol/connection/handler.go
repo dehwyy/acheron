@@ -1,11 +1,17 @@
 package connection
 
-import "net"
+import (
+	"net"
 
-type ConnectionHandler struct{}
+	"github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/server/router"
+)
 
-func NewConnectionHandler() *ConnectionHandler {
-	return &ConnectionHandler{}
+type ConnectionHandler struct {
+	router router.Router
+}
+
+func NewConnectionHandler(r router.Router) *ConnectionHandler {
+	return &ConnectionHandler{router: r}
 }
 
 func (c *ConnectionHandler) HandleConnection(conn net.Conn) error {

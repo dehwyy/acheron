@@ -6,11 +6,13 @@ import (
 	"net"
 	"time"
 
+	"github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/log"
+	"github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/server/router"
 	"github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/workerpool"
 )
 
 // @TLS 1.3 Example
-// cert, err := tls.LoadX509KeyPair("cert.pem", "key.pem")
+// cert, err := tls.LoadX509KeyPair("cerpem", "key.pem")
 //  config := &tls.Config{
 //  	Certificates: []tls.Certificate{cert},
 //  	MinVersion:   tls.VersionTLS13, // TLS 1.3
@@ -28,7 +30,7 @@ type Server struct {
 func NewXDPServer(params ServerParams) (*Server, error) {
 	var listener net.Listener
 
-	// TODO: add field for &net.TCPAddr
+	// TODO: add fields for &net.TCPAddr
 	listener, err := net.ListenTCP("tcp", &net.TCPAddr{})
 	if err != nil {
 		return nil, err
@@ -36,16 +38,17 @@ func NewXDPServer(params ServerParams) (*Server, error) {
 
 	listener = tls.NewListener(listener, params.TLS)
 
-	return &Server{
+	srv := &Server{
 		tcpListener: listener,
-		workerPool:  workerpool.NewDefaultWorkerPool(),
-	}, nil
+		workerPool:  workerpool.NewWorkerPool(),
+	}
+
+	return srv, nil
 }
 
-func (s *Server) Start() error {
-
+func (s *Server) Start(r router.Router) error {
 	ctx := context.Background()
-	s.workerPool.StartWorkers(ctx)
+	s.workerPool.StartWorkers(ctx, r)
 
 	for {
 		conn, err := s.tcpListener.Accept()
@@ -72,5 +75,7 @@ func (s *Server) Start() error {
 
 func (s *Server) Stop() {
 	s.workerPool.Stop()
-	s.tcpListener.Close()
+	if err := s.tcpListener.Close(); err != nil {
+		log.Logger.Error().Msgf("Failed to close listener: %v", err)
+	}
 }
