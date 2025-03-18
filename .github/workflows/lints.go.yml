@@ -7,8 +7,8 @@ on:
       - main
       - dev
 env:
-  GO_VERSION: stable
-  GOLANGCI_LINT_VERSION: v1.60
+  GO_VERSION: '1.23.2'
+  GOEXPERIMENT: 'aliastypeparams'
 
 jobs:
   detect-modules:
@@ -37,5 +37,5 @@ jobs:
       - name: golangci-lint ${{ matrix.modules }}
         uses: golangci/golangci-lint-action@v6
         with:
-          version: ${{ env.GOLANGCI_LINT_VERSION }}
+          version: latest
           working-directory: ${{ matrix.modules }}
