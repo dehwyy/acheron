@@ -1,9 +1,12 @@
 package handler
 
-import t "github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/types"
+import (
+	"github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/packet"
+	t "github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/types"
+)
 
 type Handler[P t.Payload] interface {
-	Handle(t.Request[P]) error // TODO: custom error
+	Handle(t.Request[[]packet.Field]) error // TODO: custom error
 }
 
 type StreamingHandler[Req t.StreamPayload] interface {

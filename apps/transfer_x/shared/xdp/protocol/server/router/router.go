@@ -6,11 +6,21 @@ import (
 )
 
 type Router interface {
+	ReadableRouter
 	AddRoute(route string, handler h.Handler[t.Payload])
 	AddStreamingRoute(route string, handler h.StreamingHandler[t.StreamPayload])
 	Mount(baseRoute string, router Router)
 }
 
+type RouteType uint8
+
+const (
+	ClassicRoute   RouteType = 1
+	StreamingRoute RouteType = 2
+)
+
 type ReadableRouter interface {
-	GetRoute(route string) h.Handler[t.Payload]
+	GetRouteType(route string) RouteType
+	GetClassicRoute(route string) h.Handler[t.Payload]
+	GetStreamingRoute(route string) h.StreamingHandler[t.Payload]
 }

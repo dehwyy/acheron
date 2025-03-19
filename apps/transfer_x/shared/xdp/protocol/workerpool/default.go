@@ -13,7 +13,7 @@ const (
 	defaultWorkersCount uint = 8
 )
 
-func newWorker(ctx context.Context, r router.Router, connectionChannel <-chan net.Conn) {
+func newWorker(ctx context.Context, r router.ReadableRouter, connectionChannel <-chan net.Conn) {
 
 	connHandler := connection.NewConnectionHandler(r)
 
@@ -38,7 +38,7 @@ type DefaultWorkerPool struct {
 	connectionChannel chan net.Conn
 }
 
-func (p *DefaultWorkerPool) StartWorkers(ctx context.Context, r router.Router, workers ...uint) {
+func (p *DefaultWorkerPool) StartWorkers(ctx context.Context, r router.ReadableRouter, workers ...uint) {
 	if p.connectionChannel != nil {
 		close(p.connectionChannel)
 	}

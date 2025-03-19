@@ -10,6 +10,8 @@ type DefaultRouter struct {
 	streamRoutes map[string]h.StreamingHandler[t.StreamPayload]
 }
 
+// `Router` interface
+
 func (r *DefaultRouter) AddRoute(route string, handler h.Handler[t.Payload]) {
 	r.routes[route] = handler
 }
@@ -20,6 +22,16 @@ func (r *DefaultRouter) AddStreamingRoute(route string, handler h.StreamingHandl
 
 func (r *DefaultRouter) Mount(baseRoute string, router Router) {} // TODO
 
-func (r *DefaultRouter) GetRoute(route string) h.Handler[t.Payload] {
+// `ReadableRouter` interface
+
+func (r *DefaultRouter) GetRouteType(route string) RouteType {
+	return ClassicRoute // TODO
+}
+
+func (r *DefaultRouter) GetClassicRoute(route string) h.Handler[t.Payload] {
 	return r.routes[route]
+}
+
+func (r *DefaultRouter) GetStreamingRoute(route string) h.StreamingHandler[t.Payload] {
+	return nil // TODO
 }

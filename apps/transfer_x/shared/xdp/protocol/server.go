@@ -46,7 +46,7 @@ func NewXDPServer(params ServerParams) (*Server, error) {
 	return srv, nil
 }
 
-func (s *Server) Start(r router.Router) error {
+func (s *Server) Start(r router.ReadableRouter) error {
 	ctx := context.Background()
 	s.workerPool.StartWorkers(ctx, r)
 

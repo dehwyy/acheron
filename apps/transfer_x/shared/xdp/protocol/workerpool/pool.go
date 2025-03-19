@@ -8,7 +8,7 @@ import (
 )
 
 type WorkerPool interface {
-	StartWorkers(ctx context.Context, r router.Router, workers ...uint)
+	StartWorkers(ctx context.Context, r router.ReadableRouter, workers ...uint)
 	Stop()
 
 	QueueConnection(net.Conn) <-chan error

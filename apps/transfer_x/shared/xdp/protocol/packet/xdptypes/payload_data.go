@@ -18,8 +18,13 @@ const (
 
 	Boolean PayloadDataType = 11
 
-	String  PayloadDataType = 1<<5 + 1 // 32
-	WString PayloadDataType = 1 << 5   // 33
+	String      PayloadDataType = 1 << 5      // 32
+	StringArray PayloadDataType = 1<<6 | 1<<5 // hz
 
-	ArrayMask PayloadDataType = 1 << 7 // 128
+	ArrayMask PayloadDataType = 1 << 7   // 128
+	Nested    PayloadDataType = 1<<8 - 1 // 255
 )
+
+func IsArray(t PayloadDataType) bool {
+	return t&ArrayMask>>7 == 1
+}

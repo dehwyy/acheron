@@ -1,6 +1,9 @@
 package handler
 
-import t "github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/types"
+import (
+	"github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/packet"
+	t "github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/types"
+)
 
 type DefaultHandler[T t.Payload] struct {
 	Handler func(t.Request[T]) error
@@ -10,6 +13,10 @@ func NewDefaultHandler[T t.Payload](handler func(t.Request[T]) error) Handler[t.
 	return &DefaultHandler[T]{Handler: handler}
 }
 
-func (h *DefaultHandler[T]) Handle(req t.Request[t.Payload]) error {
-	return h.Handler(req.(t.Request[T]))
+func (h *DefaultHandler[T]) Handle(req t.Request[[]packet.Field]) error {
+	p := packet.CreatePayload[T](req.Get())
+
+	req2 := t.NewRequest(p)
+
+	return h.Handler(req2)
 }

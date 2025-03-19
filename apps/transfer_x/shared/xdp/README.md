@@ -15,7 +15,7 @@
 ### `PacketType`
 | Name           | Value |
 | -------------- | ----- |
-| Request        | 0x01  |
+| Request        | 0x01  |int32(binary.BigEndian.Uint32(field.Value))
 | Response       | 0x02  |
 | StreamRequest  | 0x03  |
 | StreamResponse | 0x04  |
@@ -45,9 +45,9 @@
 
 ### 1-3 bits
 - 100$_$$$$ - array of **T**
-
+- 1111_1111 - nested
 - 0010_0000 - string UTF-8  (array of u16)
-- 0010_0001 - string UTF-16 (array of u32)
+- 0110_0000 - array of UTF-8
 
 ### 4-8 bits
 - 0000_0001 = 1  = u8
