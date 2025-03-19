@@ -57,17 +57,15 @@ func (s *Server) Start(r router.Router) error {
 		}
 
 		// ? Should I remove this label?
-	selectLoop:
 		for {
 			select {
 			case <-time.NewTimer(1 * time.Second).C:
-				// Logger typeshit
+				log.Logger.Debug().Msgf("Connection not handled yet!")
 			case err = <-s.workerPool.QueueConnection(conn):
 				if err != nil {
+					log.Logger.Error().Msgf("Failed to queue connection: %v", err)
 					return err
 				}
-				// Logger typeshit
-				break selectLoop
 			}
 		}
 	}

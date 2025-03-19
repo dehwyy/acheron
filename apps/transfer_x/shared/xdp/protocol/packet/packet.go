@@ -3,16 +3,25 @@ package packet
 import "github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/packet/xdptypes"
 
 type Packet struct {
-	version      byte
-	length       uint32
-	headerLength uint16
-	headers      []any // TODO
-	payload      []Payload
+	Version    byte
+	PacketType xdptypes.PacketType
+	HeadersLen uint16
+	PayloadLen uint32
+	Headers    []Header
+	Payload    []Field
 }
 
-type Payload struct {
-	keyLength uint16
-	key       []byte
-	dataType  xdptypes.PayloadDataType
-	data      []byte
+type Header struct {
+	KeyLen   byte
+	ValueLen uint16
+	Key      []byte
+	Value    []byte
+}
+
+type Field struct {
+	KeyLen   byte
+	DataType xdptypes.PayloadDataType
+	ValueLen uint32
+	Key      []byte
+	Value    []byte
 }

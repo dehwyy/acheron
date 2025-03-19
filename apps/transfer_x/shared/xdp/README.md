@@ -2,10 +2,41 @@
 - Binary
 
 ## `Packet`
-| 1 byte (version) | 2 bytes (headers length {1} = H) | H bytes (`[]Header`) | 4 bytes (length {2} = N) | N bytes (`[]Payload`) |
+| Name                    | Length (bytes) | Description            |
+| ----------------------- | ---------------| ---------------------- |
+| Version                 | 1              |                        |
+| PacketType              | 1              | `PacketType`           |
+| HeadersLength           | 2 -> H         | Length of `Headers`    |
+| PayloadLength           | 4 -> N         | Length of `Payload`    |
+| Headers                 | H              | `Headers` = `[]Header` |
+| Payload                 | N              | Payload = `[]Field`    |
 
-## `Payload`
-| 2 bytes (UTF-8 key length {3} = K) | K bytes (key) | 1 byte (`DataType Enum`) | 2 bytes (value {4} = L) | L bytes |
+
+### `PacketType`
+| Name           | Value |
+| -------------- | ----- |
+| Request        | 0x01  |
+| Response       | 0x02  |
+| StreamRequest  | 0x03  |
+| StreamResponse | 0x04  |
+
+## `Header`
+| Name           | Length (bytes) | Description |
+| -------------- | -------------- | ----------- |
+| `Key` length   | 1 -> K         |             |
+| `Value` length | 2 -> V         |             |
+| `Key`          | K              | UTF-8       |
+| `Value`        | V              | UTF-8       |
+
+
+## `Field`
+| Name           | Length (bytes) | Description |
+| -------------- | -------------- | ----------- |
+| `Key` length   | 1 -> K         |             |
+| `Value` length | 4 -> V         |             |
+| `DataType`     | 1              | Data Type   |
+| `Key`          | K              | UTF-8       |
+| `Value`        | V              |             |
 
 ## `DataType Enum`
 
@@ -13,11 +44,10 @@
 4-8 bits = reserved for common types
 
 ### 1-3 bits
-- 001$_$$$$ - array of **T**
+- 100$_$$$$ - array of **T**
 
-- 0100_0010 - string UTF-8  (array of u16)
-- 0110_0011 - string UTF-16 (array of u32)
-- 1000_0000 - custom type (would be `any`, `interface{}`)
+- 0010_0000 - string UTF-8  (array of u16)
+- 0010_0001 - string UTF-16 (array of u32)
 
 ### 4-8 bits
 - 0000_0001 = 1  = u8
@@ -34,9 +64,3 @@
 - 0000_1010 = 10 = f64
 
 - 0000_1011 = 11 = bool
-
-### Notes
-- {1} - 64 KB
-- {2} - 4 GB
-- {3} - max_length = 32768 symbols if char.length == 2 bytes
-- {4} - 64 KB

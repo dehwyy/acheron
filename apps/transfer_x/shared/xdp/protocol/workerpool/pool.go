@@ -14,6 +14,6 @@ type WorkerPool interface {
 	QueueConnection(net.Conn) <-chan error
 }
 
-func NewWorkerPool() WorkerPool {
+func NewWorkerPool() *DefaultWorkerPool {
 	return &DefaultWorkerPool{connectionChannel: nil}
 }

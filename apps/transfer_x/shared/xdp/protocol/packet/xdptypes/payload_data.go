@@ -18,8 +18,8 @@ const (
 
 	Boolean PayloadDataType = 11
 
-	String  PayloadDataType = 66
-	WString PayloadDataType = 67
+	String  PayloadDataType = 1<<5 + 1 // 32
+	WString PayloadDataType = 1 << 5   // 33
 
-	AnyType PayloadDataType = 128
+	ArrayMask PayloadDataType = 1 << 7 // 128
 )

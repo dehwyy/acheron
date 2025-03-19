@@ -5,6 +5,7 @@ import (
 	"net"
 
 	"github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/connection"
+	"github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/log"
 	"github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/server/router"
 )
 
@@ -25,11 +26,9 @@ func newWorker(ctx context.Context, r router.Router, connectionChannel <-chan ne
 				return
 			}
 
-			defer conn.Close() // ! Remove or not?
-
 			err := connHandler.HandleConnection(conn)
 			if err != nil {
-				// Logger typeshit
+				log.Logger.Error().Msgf("Failed to handle connection: %v", err)
 			}
 		}
 	}
@@ -38,12 +37,6 @@ func newWorker(ctx context.Context, r router.Router, connectionChannel <-chan ne
 type DefaultWorkerPool struct {
 	connectionChannel chan net.Conn
 }
-
-// func NewDefaultWorkerPool() WorkerPool {
-// 	return &DefaultWorkerPool{
-// 		connectionChannel: nil,
-// 	}
-// }
 
 func (p *DefaultWorkerPool) StartWorkers(ctx context.Context, r router.Router, workers ...uint) {
 	if p.connectionChannel != nil {
