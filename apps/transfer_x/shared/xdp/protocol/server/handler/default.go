@@ -14,7 +14,7 @@ func NewDefaultHandler[T t.Payload](handler func(t.Request[T]) error) Handler[t.
 }
 
 func (h *DefaultHandler[T]) Handle(req t.Request[[]packet.Field]) error {
-	p := packet.CreatePayload[T](req.Get())
+	p := packet.PayloadFromRaw[T](req.Get())
 
 	req2 := t.NewRequest(p)
 

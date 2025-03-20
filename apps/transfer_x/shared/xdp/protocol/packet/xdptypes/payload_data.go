@@ -1,5 +1,9 @@
 package xdptypes
 
+import (
+	"reflect"
+)
+
 type PayloadDataType byte
 
 const (
@@ -24,6 +28,37 @@ const (
 	ArrayMask PayloadDataType = 1 << 7   // 128
 	Nested    PayloadDataType = 1<<8 - 1 // 255
 )
+
+func FromReflectKind(k reflect.Kind) PayloadDataType {
+	switch k {
+	case reflect.Uint8:
+		return U8
+	case reflect.Uint16:
+		return U16
+	case reflect.Uint32:
+		return U32
+	case reflect.Uint64:
+		return U64
+	case reflect.Int8:
+		return I8
+	case reflect.Int16:
+		return I16
+	case reflect.Int32:
+		return I32
+	case reflect.Int64:
+		return I64
+	case reflect.Float32:
+		return F32
+	case reflect.Float64:
+		return F64
+	case reflect.Bool:
+		return Boolean
+	case reflect.String:
+		return String
+	default:
+		return 0
+	}
+}
 
 func IsArray(t PayloadDataType) bool {
 	return t&ArrayMask>>7 == 1

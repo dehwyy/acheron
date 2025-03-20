@@ -25,3 +25,5 @@ type Field struct {
 	Key      []byte
 	Value    []byte
 }
+
+type RawPayload = []Field

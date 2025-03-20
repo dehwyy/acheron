@@ -29,7 +29,7 @@ func CreatePacketFromReader(r io.Reader) (*Packet, error) {
 	if _, err = io.ReadFull(r, payloadBuffer); err != nil {
 		return nil, err
 	}
-	p.Payload, err = payloadFromBytes(payloadBuffer)
+	p.Payload, err = RawPayloadFromBytes(payloadBuffer)
 	if err != nil {
 		return nil, err
 	}
