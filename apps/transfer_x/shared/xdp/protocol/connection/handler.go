@@ -5,6 +5,7 @@ import (
 
 	"github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/log"
 	"github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/packet"
+	"github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/packet/headers"
 	"github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/server/router"
 	"github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/types"
 )
@@ -20,13 +21,13 @@ func NewConnectionHandler(r router.ReadableRouter) *ConnectionHandler {
 func (c *ConnectionHandler) HandleConnection(conn net.Conn) error {
 	defer conn.Close()
 
-	p, err := packet.CreatePacketFromReader(conn)
+	p, err := packet.NewPacket(conn)
 	if err != nil {
 		return err
 	}
 
-	headers := packet.CreateHeadersMap(p.Headers)
-	route, ok := headers[packet.HeaderRoute]
+	h := p.Headers.ToMap()
+	route, ok := h[headers.HeaderRoute]
 	if !ok {
 		log.Logger.Error().Msgf("No route header in packet: %v", p.Headers)
 		return nil
@@ -41,7 +42,7 @@ func (c *ConnectionHandler) HandleConnection(conn net.Conn) error {
 			return err
 		}
 	case router.StreamingRoute:
-		// TOOD
+		// TODO
 		// c.router.GetStreamingRoute(route).Handle(p.Payload)
 	}
 

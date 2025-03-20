@@ -13,10 +13,13 @@ func NewDefaultHandler[T t.Payload](handler func(t.Request[T]) error) Handler[t.
 	return &DefaultHandler[T]{Handler: handler}
 }
 
-func (h *DefaultHandler[T]) Handle(req t.Request[[]packet.Field]) error {
-	p := packet.PayloadFromRaw[T](req.Get())
+func (h *DefaultHandler[T]) Handle(req t.Request[*packet.RawPayload]) error {
+	p, err := packet.PayloadFromRaw[T](req.Get())
+	if err != nil {
+		return err
+	}
 
-	req2 := t.NewRequest(p)
+	req2 := t.NewRequest(*p)
 
 	return h.Handler(req2)
 }

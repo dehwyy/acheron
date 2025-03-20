@@ -5,52 +5,53 @@ import (
 	"io"
 
 	"github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/log"
+	"github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/packet/headers"
 	"github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/packet/xdptypes"
 )
 
-func CreatePacketFromReader(r io.Reader) (*Packet, error) {
-	p, err := newPacketWithMetadataFromReader(r)
-	if err != nil {
-		return nil, err
-	}
+const (
+	offsetMetaVersion    uint8 = 0
+	offsetMetaPacketType uint8 = 1
+	offsetMetaHeadersLen uint8 = 2
+	offsetMetaPayloadLen uint8 = 4
+	offsetMetaData       uint8 = 8
+)
 
-	// Parse headers
-	headersBuffer := make([]byte, p.HeadersLen)
-	if _, err = io.ReadFull(r, headersBuffer); err != nil {
-		return nil, err
-	}
-	p.Headers, err = headersFromBytes(headersBuffer)
-	if err != nil {
-		return nil, err
-	}
+func NewPacket(r io.Reader) (*Packet, error) {
+	p := new(Packet)
 
-	// Parse payload
-	payloadBuffer := make([]byte, p.PayloadLen)
-	if _, err = io.ReadFull(r, payloadBuffer); err != nil {
-		return nil, err
-	}
-	p.Payload, err = RawPayloadFromBytes(payloadBuffer)
-	if err != nil {
-		return nil, err
-	}
-
-	return p, nil
-}
-
-func newPacketWithMetadataFromReader(r io.Reader) (*Packet, error) {
-	var p Packet
-
-	metadata := make([]byte, 1+1+2+4)
+	metadata := make([]byte, offsetMetaData)
 	_, err := io.ReadFull(r, metadata)
 	if err != nil {
 		log.Logger.Error().Msgf("Failed to read metadata: %v", err)
 		return nil, err
 	}
 
-	p.Version = metadata[0]
-	p.PacketType = xdptypes.PacketType(metadata[1])
-	p.HeadersLen = binary.BigEndian.Uint16(metadata[2:4])
-	p.PayloadLen = binary.BigEndian.Uint32(metadata[4:8])
+	p.ProtocolVersion = metadata[offsetMetaVersion]
+	p.PacketType = xdptypes.PacketType(metadata[offsetMetaPacketType])
+	headersLen := binary.BigEndian.Uint16(metadata[offsetMetaHeadersLen:offsetMetaPayloadLen])
+	payloadLen := binary.BigEndian.Uint32(metadata[offsetMetaPayloadLen:offsetMetaData])
 
-	return &p, nil
+	// Parse headers
+	headersBuffer := make([]byte, headersLen)
+	if _, err = io.ReadFull(r, headersBuffer); err != nil {
+		return nil, err
+	}
+
+	p.Headers, err = headers.NewRawHeaders(headersBuffer)
+	if err != nil {
+		return nil, err
+	}
+
+	// Parse payload
+	payloadBuffer := make([]byte, payloadLen)
+	if _, err = io.ReadFull(r, payloadBuffer); err != nil {
+		return nil, err
+	}
+	p.Payload, err = NewRawPayload(payloadBuffer)
+	if err != nil {
+		return nil, err
+	}
+
+	return p, nil
 }

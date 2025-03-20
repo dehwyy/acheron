@@ -3,7 +3,7 @@ package packet
 import (
 	"bytes"
 	"encoding/binary"
-	"fmt"
+	"errors"
 	"math"
 	"reflect"
 
@@ -19,8 +19,20 @@ const (
 	offsetPayloadData     uint32 = 6
 )
 
-func RawPayloadFromBytes(b []byte) (RawPayload, error) {
-	payload := make([]Field, 0, 4)
+type RawPayload struct {
+	fields []rawPayloadField
+}
+
+type rawPayloadField struct {
+	Key      []byte
+	Value    []byte
+	KeyLen   byte
+	DataType xd.PayloadDataType
+	ValueLen uint32
+}
+
+func NewRawPayload(b []byte) (*RawPayload, error) {
+	payload := make([]rawPayloadField, 0, 4)
 	size := uint32(len(b))
 	var offset uint32
 
@@ -34,7 +46,7 @@ func RawPayloadFromBytes(b []byte) (RawPayload, error) {
 			break
 		}
 
-		payload = append(payload, Field{
+		payload = append(payload, rawPayloadField{
 			KeyLen:   b[offset],
 			DataType: xd.PayloadDataType(b[offset+offsetPayloadDataType]),
 			ValueLen: valueLen,
@@ -45,39 +57,37 @@ func RawPayloadFromBytes(b []byte) (RawPayload, error) {
 		offset = newOffset
 	}
 
-	return payload, nil
+	return &RawPayload{payload}, nil
 }
 
-func createParsingCallback(field Field) func(callback func([]byte) any, size uint8) any {
+func (*RawPayload) createParsingCallback(v []byte, t xd.PayloadDataType) func(callback func([]byte) any, size uint8) any {
 	return func(callback func([]byte) any, sz uint8) any {
 		size := int(sz)
-		if !xd.IsArray(field.DataType) {
-			return callback(field.Value)
+		if !xd.IsArray(t) {
+			return callback(v)
 		}
 
-		values := make([]any, len(field.Value)/size)
+		values := make([]any, len(v)/size)
 
-		for i := 0; i < len(field.Value)-1; i += size {
-			values[i/size] = callback(field.Value[i : i+size])
+		// ? Maybe err
+		for i := 0; i < len(v)-1; i += size {
+			values[i/size] = callback(v[i : i+size])
 		}
 
 		return values
 	}
 }
 
-func payloadFromRawReflected(rawPayload RawPayload, reflectType reflect.Type) reflect.Value {
-	payload := reflect.New(reflectType)
-	if payload.Kind() == reflect.Ptr {
-		payload = payload.Elem()
-	}
+func (raw *RawPayload) ToPayloadReflected(reflectType reflect.Type) reflect.Value {
+	payload := reflect.New(reflectType).Elem()
 
-	for _, field := range rawPayload {
+	for _, f := range raw.fields {
 		var value any
-		key := string(field.Key)
+		key := string(f.Key)
 
-		fromCallback := createParsingCallback(field)
+		fromCallback := raw.createParsingCallback(f.Value, f.DataType)
 
-		switch field.DataType {
+		switch f.DataType {
 		case xd.U8:
 			value = fromCallback(func(b []byte) any { return b[0] }, 1)
 		case xd.U16:
@@ -101,21 +111,20 @@ func payloadFromRawReflected(rawPayload RawPayload, reflectType reflect.Type) re
 		case xd.Boolean:
 			value = fromCallback(func(b []byte) any { return b[0] != 0 }, 1)
 		case xd.String:
-			value = string(field.Value)
+			value = string(f.Value)
 		case xd.StringArray:
 			// TODO
 		case xd.Nested:
-			data, err := RawPayloadFromBytes(field.Value)
+			nestedRaw, err := NewRawPayload(f.Value)
 			if err != nil {
-
+				log.Logger.Error().Msgf("Failed to create nested payload: %v", err)
+				continue
 			}
-
-			value = payloadFromRawReflected(data, payload.FieldByName(key).Type())
-
+			value = nestedRaw.ToPayloadReflected(payload.FieldByName(key).Type())
 		case xd.ArrayMask:
 			log.Logger.Error().Msgf("<Mask> cannot be data type")
 		default:
-			log.Logger.Error().Msgf("Unknown type: %v", field.DataType)
+			log.Logger.Error().Msgf("Unknown type: %v", f.DataType)
 			return payload
 		}
 
@@ -125,23 +134,41 @@ func payloadFromRawReflected(rawPayload RawPayload, reflectType reflect.Type) re
 	return payload
 }
 
-func PayloadFromRaw[T types.Payload](rawPayload []Field) T {
+func PayloadFromRaw[T types.Payload](rawPayload *RawPayload) (*T, error) {
 	var payload T
 
-	payload, ok := payloadFromRawReflected(rawPayload, reflect.TypeOf(payload)).Interface().(T)
+	payload, ok := rawPayload.ToPayloadReflected(reflect.TypeOf(payload)).Interface().(T)
 	if !ok {
 		log.Logger.Error().Msgf("Failed to create payload: %v", payload)
+		return nil, errors.New("Failed to create payload")
 	}
 
-	return payload
+	return &payload, nil
 }
 
-func PayloadToBytes[T types.Payload](payload T) ([]byte, error) {
-	reflectPayload := reflect.ValueOf(payload)
-	reflectPayloadType := reflect.TypeOf(payload)
+func PayloadFromBytes[T types.Payload](b []byte) (*T, error) {
+	var payload T
+
+	rawPayload, err := NewRawPayload(b)
+	if err != nil {
+		return nil, err
+	}
+
+	payload, ok := rawPayload.ToPayloadReflected(reflect.TypeOf(payload)).Interface().(T)
+	if !ok {
+		log.Logger.Error().Msgf("Failed to create payload: %v", payload)
+		return nil, errors.New("Failed to create payload")
+	}
+
+	return &payload, nil
+}
+
+func PayloadToBytes[T types.Payload](payload *T) ([]byte, error) {
+	reflectPayload := reflect.ValueOf(payload).Elem()
+	reflectPayloadType := reflect.TypeOf(payload).Elem()
 
 	var buf bytes.Buffer
-	for i := 0; i < reflectPayload.NumField(); i++ {
+	for i := range reflectPayload.NumField() {
 		field := reflectPayload.Field(i)
 		fieldType := reflectPayloadType.Field(i)
 
@@ -156,8 +183,6 @@ func PayloadToBytes[T types.Payload](payload T) ([]byte, error) {
 		default:
 			size = uint32(field.Type().Size())
 		}
-
-		fmt.Println("size: ", size, " with kind: ", field.Kind())
 
 		if err := binary.Write(&buf, binary.BigEndian, byte(len(key))); err != nil {
 			return nil, err
@@ -183,78 +208,7 @@ func PayloadToBytes[T types.Payload](payload T) ([]byte, error) {
 				return nil, err
 			}
 		}
-
 	}
 
 	return buf.Bytes(), nil
-}
-
-func _payloadToRawReflected(payload reflect.Value) RawPayload {
-	rawPayload := make(RawPayload, 0)
-
-	for i := 0; i < payload.NumField(); i++ {
-		field := payload.Field(i)
-
-		key := []byte(field.Type().Name())
-		var value []byte
-
-		switch field.Kind() {
-		case reflect.Uint8:
-			value = make([]byte, 1)
-			value[0] = uint8(field.Uint())
-		case reflect.Uint16:
-			value = make([]byte, 2)
-			binary.BigEndian.PutUint16(value, uint16(field.Uint()))
-		case reflect.Uint32:
-			value = make([]byte, 4)
-			binary.BigEndian.PutUint32(value, uint32(field.Uint()))
-		case reflect.Uint64:
-			value = make([]byte, 8)
-			binary.BigEndian.PutUint64(value, uint64(field.Uint()))
-		case reflect.Int8:
-			value = make([]byte, 1)
-			value[0] = uint8(field.Int())
-		case reflect.Int16:
-			value = make([]byte, 2)
-			binary.BigEndian.PutUint16(value, uint16(field.Int()))
-		case reflect.Int32:
-			value = make([]byte, 4)
-			binary.BigEndian.PutUint32(value, uint32(field.Int()))
-		case reflect.Int64:
-			value = make([]byte, 8)
-			binary.BigEndian.PutUint64(value, uint64(field.Int()))
-		case reflect.Float32:
-			value = make([]byte, 4)
-			binary.BigEndian.PutUint32(value, math.Float32bits(float32(field.Float())))
-		case reflect.Float64:
-			value = make([]byte, 8)
-			binary.BigEndian.PutUint64(value, math.Float64bits(field.Float()))
-		case reflect.Bool:
-			value = make([]byte, 1)
-			if field.Bool() {
-				value[0] = 1
-			}
-		case reflect.String:
-			value = []byte(field.String())
-		case reflect.Slice:
-			// TODO
-		}
-
-		rawPayload = append(rawPayload, Field{
-			KeyLen:   byte(len(key)),
-			DataType: xd.FromReflectKind(field.Kind()),
-			ValueLen: uint32(len(value)),
-			Key:      key,
-			Value:    value,
-		})
-	}
-
-	return nil
-}
-
-func _PayloadToRaw[T types.Payload](payload T) (RawPayload, error) {
-
-	rawPayload := _payloadToRawReflected(reflect.ValueOf(payload))
-
-	return rawPayload, nil
 }

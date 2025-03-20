@@ -1,4 +1,4 @@
-package packet
+package headers
 
 import (
 	"encoding/binary"
@@ -6,13 +6,16 @@ import (
 	"github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/log"
 )
 
-// ! - Necessary headers
-// ? - Optional headers (depends of `packetType“)
-const (
-	HeaderRoute    = "route"     // !
-	HeaderPacketID = "packet-id" // !
-	HeaderStreamID = "stream-id" // ?
-)
+type RawHeaders struct {
+	headers []rawHeader
+}
+
+type rawHeader struct {
+	Value    []byte
+	Key      []byte
+	ValueLen uint16
+	KeyLen   byte
+}
 
 const (
 	offsetHeaderKeyLen   uint16 = 0
@@ -20,8 +23,8 @@ const (
 	offsetHeaderData     uint16 = 3
 )
 
-func headersFromBytes(b []byte) ([]Header, error) {
-	var headers []Header
+func NewRawHeaders(b []byte) (*RawHeaders, error) {
+	var headers []rawHeader
 	size := uint16(len(b))
 	var offset uint16
 
@@ -32,10 +35,10 @@ func headersFromBytes(b []byte) ([]Header, error) {
 		newOffset := offset + offsetHeaderData + keyLen + valueLen
 		if newOffset > size {
 			log.Logger.Warn().Msgf("Limit exceeded (Headers): %d/%d", newOffset, size)
-			return headers, nil
+			break
 		}
 
-		headers = append(headers, Header{
+		headers = append(headers, rawHeader{
 			KeyLen:   b[offset],
 			ValueLen: valueLen,
 			Key:      b[offset+offsetHeaderData : offset+offsetHeaderData+keyLen],
@@ -45,12 +48,12 @@ func headersFromBytes(b []byte) ([]Header, error) {
 		offset = newOffset
 	}
 
-	return headers, nil
+	return &RawHeaders{headers}, nil
 }
 
-func CreateHeadersMap(headers []Header) map[string]string {
+func (raw *RawHeaders) ToMap() map[string]string {
 	h := make(map[string]string)
-	for _, header := range headers {
+	for _, header := range raw.headers {
 		h[string(header.Key)] = string(header.Value)
 	}
 

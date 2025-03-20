@@ -7,7 +7,9 @@ import (
 	"github.com/dehwyy/acheron/apps/transfer_x/shared/xdp/protocol/packet"
 )
 
+//nolint:govet
 type P struct {
+	Boolean    bool
 	Unsigned8  uint8
 	Unsigned16 uint16
 	Unsigned32 uint32
@@ -18,7 +20,6 @@ type P struct {
 	Signed64   int64
 	Float32    float32
 	Float64    float64
-	Boolean    bool
 	SomeString string
 }
 
@@ -37,18 +38,16 @@ func TestEncodeDecodeBinary(t *testing.T) {
 		Boolean:    true,
 		SomeString: "hello typeshit ts pmo",
 	}
-	b, err := packet.PayloadToBytes(p)
+	b, err := packet.PayloadToBytes(&p)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	r, err := packet.RawPayloadFromBytes(b)
+	parsed, err := packet.PayloadFromBytes[P](b)
 	if err != nil {
 		t.Fatal(err)
 	}
-
-	parsed := packet.PayloadFromRaw[P](r)
 
 	fmt.Printf("initial: %+v\n", p)
-	fmt.Printf("parsed : %+v\n", parsed)
+	fmt.Printf("parsed : %+v\n", *parsed)
 }

@@ -6,7 +6,7 @@ import (
 )
 
 type Handler[P t.Payload] interface {
-	Handle(t.Request[[]packet.Field]) error // TODO: custom error
+	Handle(t.Request[*packet.RawPayload]) error // TODO: custom error
 }
 
 type StreamingHandler[Req t.StreamPayload] interface {
